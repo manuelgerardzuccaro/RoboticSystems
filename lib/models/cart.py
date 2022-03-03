@@ -11,9 +11,9 @@ class Cart:
         self.position = 0
 
     def evaluate(self, delta_t, _force):
-        speed_prime = (1 - self.b * delta_t / self.M) * self.speed + delta_t * _force / self.M
-        position_prime = self.position + self.speed * delta_t
-        self.speed = speed_prime
-        self.position = position_prime
+        new_speed = (1 - self.b * delta_t / self.M) * self.speed + delta_t * _force / self.M
+        new_position = self.position + self.speed * delta_t
+        self.speed = new_speed
+        self.position = new_position
 
 

@@ -6,30 +6,17 @@ import sys
 sys.path.insert(0, '../lib')
 
 from models.cart import *
-from gui.gui_1d import *
 
-from PyQt5.QtWidgets import QApplication, QWidget
+cart = Cart(1, 0.8) # mass 1 Kg, friction = 0.8
 
-class CartSystem:
+t = 0           # beginning of events
+delta_t = 1e-3  # sampling interval = 1ms
 
-    def __init__(self):
-        # Mass = 1kg
-        # friction = 0.8
-        self.cart = Cart(1, 0.8)
+_input = 3   # constant input of 3 N
 
-    def run(self, delta_t):
-        self.cart.evaluate(delta_t, 5) # 5 Newton
-
-    def get_pose(self):
-        return self.cart.position
-
-    def get_speed(self):
-        return self.cart.speed
+while t < 5:   # let's simulate 5 seconds
+    print("T = {:.3f}, V = {:.3f}, P = {:.3f}".format(t, cart.speed, cart.position))
+    cart.evaluate(delta_t, _input)
+    t = t + delta_t
 
 
-if __name__ == '__main__':
-    cart_sys = CartSystem()
-    app = QApplication(sys.argv)
-    delta_t = 1e-3 # 1ms
-    ex = MainWindow(delta_t, cart_sys)
-    sys.exit(app.exec_())

@@ -14,6 +14,7 @@ class MainWindow(QWidget):
     def __init__(self, delta_t, _sys):
         super(MainWindow, self).__init__()
         self.delta_t = delta_t
+        self.t = 0
         self._system = _sys
         self.initUI()
 
@@ -33,7 +34,9 @@ class MainWindow(QWidget):
 
 
     def go(self):
-        self._system.run(self.delta_t)
+        if not(self._system.run(self.t, self.delta_t)):
+            self._timer_painter.stop()
+        self.t += self.delta_t
         self.update() # repaint window
 
 
@@ -55,8 +58,9 @@ class MainWindow(QWidget):
         qp.drawLine(990, 281, 990 - 10, 281 - 10)
         qp.drawLine(990, 282, 990 - 10, 282 + 10)
 
-        qp.drawText(900, 20, "P = %6.3f m" % (self._system.get_pose()))
-        qp.drawText(900, 40, "V = %6.3f m/s" % (self._system.get_speed()))
+        qp.drawText(850, 20, "t = %6.3f s" % (self.t))
+        qp.drawText(850, 40, "P = %6.3f m" % (self._system.get_pose()))
+        qp.drawText(850, 60, "V = %6.3f m/s" % (self._system.get_speed()))
 
         qp.end()
 
