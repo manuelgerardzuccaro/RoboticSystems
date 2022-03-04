@@ -11,11 +11,11 @@ from PyQt5.QtWidgets import QApplication, QWidget
 
 class MainWindow(QWidget):
 
-    def __init__(self, delta_t, _sys):
+    def __init__(self, delta_t, _compound_sys):
         super(MainWindow, self).__init__()
         self.delta_t = delta_t
         self.t = 0
-        self._system = _sys
+        self.compound_system = _compound_sys
         self.initUI()
 
     def initUI(self):
@@ -34,7 +34,7 @@ class MainWindow(QWidget):
 
 
     def go(self):
-        if not(self._system.run(self.t, self.delta_t)):
+        if not(self.compound_system.run(self.t, self.delta_t)):
             self._timer_painter.stop()
         self.t += self.delta_t
         self.update() # repaint window
@@ -47,7 +47,7 @@ class MainWindow(QWidget):
         qp.setBrush(QtGui.QColor(255,255,255))
         qp.drawRect(event.rect())
 
-        x_pos = 50 + (self._system.get_pose() * 100)
+        x_pos = 50 + (self.compound_system.get_pose() * 50)
         y_pos = 236
 
         qp.drawPixmap(x_pos,y_pos,self.robot_pic)
@@ -59,8 +59,8 @@ class MainWindow(QWidget):
         qp.drawLine(990, 282, 990 - 10, 282 + 10)
 
         qp.drawText(850, 20, "t = %6.3f s" % (self.t))
-        qp.drawText(850, 40, "P = %6.3f m" % (self._system.get_pose()))
-        qp.drawText(850, 60, "V = %6.3f m/s" % (self._system.get_speed()))
+        qp.drawText(850, 40, "P = %6.3f m" % (self.compound_system.get_pose()))
+        qp.drawText(850, 60, "V = %6.3f m/s" % (self.compound_system.get_speed()))
 
         qp.end()
 
