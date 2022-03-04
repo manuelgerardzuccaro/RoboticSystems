@@ -35,7 +35,6 @@ class CartSystem(RoboticSystem):
             self.plotter.plot(['t', 'time'],
                                   [ [ 'F', 'Force' ],
                                     [ 'v', 'Speed' ] ])
-            self.plotter.plot(['t', 'time'], [ [ 'p', 'Position' ] ])
             self.plotter.show()
             return False
         else:
