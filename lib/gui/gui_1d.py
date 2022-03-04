@@ -32,7 +32,7 @@ class MainWindow(QWidget):
 
 
     def go(self):
-        if not(self.compound_system.run()):
+        if not(self.compound_system.step()):
             self._timer_painter.stop()
         self.update() # repaint window
 
