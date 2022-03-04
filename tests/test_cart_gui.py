@@ -16,9 +16,12 @@ class CartSystem:
         # Mass = 1kg
         # friction = 0.8
         self.cart = Cart(1, 0.8)
+        self.delta_t = 1e-3 # 1ms
+        self.t = 0
 
-    def run(self, t, delta_t):
-        self.cart.evaluate(delta_t, 2) # 2 Newton
+    def run(self):
+        self.cart.evaluate(self.delta_t, 2) # 2 Newton
+        self.t = self.t + self.delta_t
         return True
 
     def get_pose(self):
@@ -31,6 +34,5 @@ class CartSystem:
 if __name__ == '__main__':
     cart_sys = CartSystem()
     app = QApplication(sys.argv)
-    delta_t = 1e-3 # 1ms
-    ex = MainWindow(delta_t, cart_sys)
+    ex = MainWindow(cart_sys)
     sys.exit(app.exec_())

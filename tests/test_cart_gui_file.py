@@ -19,10 +19,13 @@ class CartSystem:
         self.cart = Cart(1, 0.8)
         self.datafile = FileReader(filename)
         self.datafile.load()
+        self.delta_t = 1e-3 # 1ms
+        self.t = 0
 
-    def run(self, t, delta_t):
-        [ F ] = self.datafile.get_vars(t, [ 'F' ])
-        self.cart.evaluate(delta_t, F)
+    def run(self):
+        [ F ] = self.datafile.get_vars(self.t, [ 'F' ])
+        self.cart.evaluate(self.delta_t, F)
+        self.t = self.t + self.delta_t
         return True
 
     def get_pose(self):
@@ -35,6 +38,5 @@ class CartSystem:
 if __name__ == '__main__':
     cart_sys = CartSystem(sys.argv[1])
     app = QApplication(sys.argv)
-    delta_t = 1e-3 # 1ms
-    ex = MainWindow(delta_t, cart_sys)
+    ex = MainWindow(cart_sys)
     sys.exit(app.exec_())
