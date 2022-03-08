@@ -4,7 +4,7 @@
 
 ------
 
-## *Sommario*
+## *Index*
 
 - **[Credits](#Credits)**
 - **[Usage](#Usage)**
@@ -86,7 +86,7 @@ $ source .bashrc
 Now, you can use the `init.sh` script to install all necessary package:
 
 ```bash
-sudo chmod +x ./init.sh && ./init.sh
+$ sudo chmod +x ./init.sh && ./init.sh
 ```
 
 Then you can try some scripts inside **./tests**. 
@@ -100,16 +100,16 @@ Download and install <a target="_blank" href="https://www.docker.com/products/do
 Use the following commands:
 
 ```bash
-docker-compose up -d
+$ docker-compose up -d
 ```
 
 ```bash
-sudo chmod +x docker_run.sh
+$ sudo chmod +x docker_run.sh
 ```
 
 Then you can try some scripts inside **./tests**:
 
 ```bash
-./docker_run.sh python3 tests/test_cart_plot.py
+$ ./docker_run.sh python3 tests/test_cart_plot.py
 ```
 
