@@ -104,6 +104,10 @@ $ docker-compose up -d
 ```
 
 ```bash
+$ xhost local:root
+```
+
+```bash
 $ sudo chmod +x docker_run.sh
 ```
 
