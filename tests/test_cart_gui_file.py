@@ -37,5 +37,5 @@ class CartSystem(RoboticSystem):
 if __name__ == '__main__':
     cart_sys = CartSystem(sys.argv[1])
     app = QApplication(sys.argv)
-    ex = MainWindow(cart_sys)
+    ex = CartWindow(cart_sys)
     sys.exit(app.exec_())

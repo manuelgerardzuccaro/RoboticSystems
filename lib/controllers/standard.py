@@ -34,3 +34,19 @@ class ProportionalIntegral:
     def evaluate(self, delta_t, target, current):
         return self.p.evaluate(target, current) + self.i.evaluate(delta_t, target, current)
 
+
+class PID:
+
+    def __init__(self, kp, ki, kd):
+        self.p = Proportional(kp)
+        self.i = Integral(ki)
+        self.kd = kd
+        self.prev_error = 0
+
+    def evaluate(self, delta_t, target, current):
+        error = target - current
+        derivative  = (error - self.prev_error) / delta_t
+        self.prev_error = error
+        return self.p.evaluate(target, current) + self.i.evaluate(delta_t, target, current) + \
+          derivative * self.kd
+

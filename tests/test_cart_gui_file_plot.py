@@ -31,10 +31,12 @@ class CartSystem(RoboticSystem):
         self.plotter.add('F', F)
         self.plotter.add('v', self.get_speed())
         self.plotter.add('p', self.get_pose())
-        if self.t >= 4: # after 4 seconds plot data and stop simulation
+        if self.t >= 6: # after 6 seconds plot data and stop simulation
             self.plotter.plot(['t', 'time'],
                                   [ [ 'F', 'Force' ],
                                     [ 'v', 'Speed' ] ])
+            self.plotter.plot(['t', 'time'],
+                                  [ [ 'p', 'Position' ] ])
             self.plotter.show()
             return False
         else:
@@ -50,5 +52,5 @@ class CartSystem(RoboticSystem):
 if __name__ == '__main__':
     cart_sys = CartSystem(sys.argv[1])
     app = QApplication(sys.argv)
-    ex = MainWindow(cart_sys)
+    ex = CartWindow(cart_sys)
     sys.exit(app.exec_())

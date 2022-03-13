@@ -21,7 +21,7 @@ class CartRobot(RoboticSystem):
         # friction = 0.8
         self.cart = Cart(1, 0.8)
         self.plotter = DataPlotter()
-        self.controller = ProportionalIntegral(3.0, 2.0)
+        self.controller = ProportionalIntegral(4.0, 3.0)
         self.target_speed = 1.5 # 1.5 m/s
 
     def run(self):
@@ -48,5 +48,5 @@ class CartRobot(RoboticSystem):
 if __name__ == '__main__':
     cart_robot = CartRobot()
     app = QApplication(sys.argv)
-    ex = MainWindow(cart_robot)
+    ex = CartWindow(cart_robot)
     sys.exit(app.exec_())
