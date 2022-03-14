@@ -9,10 +9,10 @@ import pathlib
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget
 
-class MainWindow(QWidget):
+class CartWindow(QWidget):
 
     def __init__(self, _compound_sys):
-        super(MainWindow, self).__init__()
+        super(CartWindow, self).__init__()
         self.compound_system = _compound_sys
         self.initUI()
 
@@ -61,4 +61,63 @@ class MainWindow(QWidget):
 
         qp.end()
 
+
+# -------------------------------------------------------------------------------
+
+class ArmWindow(QWidget):
+
+    def __init__(self, _compound_sys):
+        super(ArmWindow, self).__init__()
+        self.compound_system = _compound_sys
+        self.initUI()
+
+    def initUI(self):
+        self.setGeometry(0, 0, 1000, 400)
+        self.setWindowTitle('Robot 1D Simulator')
+        self.show()
+
+        self._timer_painter = QtCore.QTimer(self)
+        self._timer_painter.start(self.compound_system.delta_t * 1000)
+        self._timer_painter.timeout.connect(self.go)
+
+
+    def go(self):
+        if not(self.compound_system.step()):
+            self._timer_painter.stop()
+        self.update() # repaint window
+
+
+    def paintEvent(self, event):
+        qp = QtGui.QPainter()
+        qp.begin(self)
+
+        th = self.compound_system.get_pose()
+        omega = self.compound_system.get_speed()
+
+        x = 200 * self.compound_system.arm.r * math.sin(th)
+        y = 200 * self.compound_system.arm.r * math.cos(th)
+
+        self.__draw_arm_element(qp, 500, 20, x + 500, y + 20)
+
+        qp.drawText(800, 20, "t = %6.3f s" % (self.compound_system.t))
+        qp.drawText(800, 40, "Theta = %6.3f deg" % (math.degrees(th)))
+        qp.drawText(800, 60, "Omega = %6.3f rad/s" % (omega))
+
+        qp.end()
+
+
+    def __draw_arm_element(self, qp, x1, y1, x2, y2, ellipse=True):
+        qp.setPen(QtGui.QPen(QtCore.Qt.black, 8))
+        qp.drawLine(x1, y1, x2, y2)
+
+        if ellipse:
+            qp.setPen(QtGui.QPen(QtCore.Qt.red, 3))
+
+            qp.drawEllipse(QtCore.QPoint(x1, y1), 10, 10)
+            qp.drawEllipse(QtCore.QPoint(x1, y1), 4, 4)
+
+            qp.setPen(QtGui.QPen(QtCore.Qt.black, 3))
+
+            qp.drawEllipse(QtCore.QPoint(x2, y2), 10, 10)
+            qp.drawEllipse(QtCore.QPoint(x2, y2), 4, 4)
 

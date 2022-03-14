@@ -30,9 +30,11 @@ class CartRobot(RoboticSystem):
         self.plotter.add('t', self.t)
         self.plotter.add('target', self.target_speed)
         self.plotter.add('speed', self.get_speed())
+        self.plotter.add('F', F)
         if self.t >= 15:
             self.plotter.plot( [ 't', 'time'], [ [ 'target', 'Target' ],
-                                                 [ 'speed', 'Current Speed' ] ])
+                                                 [ 'speed', 'Current Speed' ],
+                                                 [ 'F', 'Force' ] ])
             self.plotter.show()
             return False
         else:
@@ -48,5 +50,5 @@ class CartRobot(RoboticSystem):
 if __name__ == '__main__':
     cart_robot = CartRobot()
     app = QApplication(sys.argv)
-    ex = MainWindow(cart_robot)
+    ex = CartWindow(cart_robot)
     sys.exit(app.exec_())
