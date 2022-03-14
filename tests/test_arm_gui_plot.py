@@ -27,8 +27,8 @@ class ArmRobot(RoboticSystem):
 
     def run(self):
         T = 3 # 3 Nm
-        #self.arm.evaluate_no_approx(self.delta_t, T)
-        self.arm.evaluate(self.delta_t, T)
+        self.arm.evaluate_no_approx(self.delta_t, T)
+        #self.arm.evaluate(self.delta_t, T)
         self.plotter.add('t', self.t)
         self.plotter.add('T', T)
         self.plotter.add('omega', self.get_speed())
