@@ -50,3 +50,34 @@ class PID:
         return self.p.evaluate(target, current) + self.i.evaluate(delta_t, target, current) + \
           derivative * self.kd
 
+
+class PIDSat:
+
+    def __init__(self, kp, ki, kd, saturation, antiwindup = False):
+        self.p = Proportional(kp)
+        self.i = Integral(ki)
+        self.kd = kd
+        self.prev_error = 0
+        self.saturation = saturation
+        self.antiwindup = antiwindup
+        self.in_saturation = False
+
+    def evaluate(self, delta_t, target, current):
+        error = target - current
+        derivative  = (error - self.prev_error) / delta_t
+        self.prev_error = error
+        if not(self.in_saturation):
+            self.i.evaluate(delta_t, target, current)
+        output = self.p.evaluate(target, current) + self.i.output + \
+          derivative * self.kd
+        if output > self.saturation:
+            output = self.saturation
+            self.in_saturation = True
+        elif output < -self.saturation:
+            output = - self.saturation
+            self.in_saturation = True
+        else:
+            self.in_saturation = False
+        return output
+
+

@@ -1,5 +1,5 @@
 #
-# test_position_control_cart_gui_plot.py
+# test_speed_control_cart_saturation_gui.py
 #
 
 import sys
@@ -21,18 +21,21 @@ class CartRobot(RoboticSystem):
         # friction = 0.8
         self.cart = Cart(1, 0.8)
         self.plotter = DataPlotter()
-        self.controller = Proportional(0.2) # Kp = 0.2
-        self.target_position = 4 # 4 meters
+        self.controller = PIDSat(3.0, 2.0, 0.0, 2.0, True) # Kp = 3, KI = 2, Sat = 0.5 N
+        #self.controller = PID(3.0, 2.0, 0.0) # Kp = 3, KI = 2
+        self.target_speed = 1.5 # 1.5 m/s
 
     def run(self):
-        F = self.controller.evaluate(self.target_position, self.get_pose())
+        F = self.controller.evaluate(self.delta_t, self.target_speed, self.get_speed())
         self.cart.evaluate(self.delta_t, F)
         self.plotter.add('t', self.t)
-        self.plotter.add('target', self.target_position)
-        self.plotter.add('position', self.get_pose())
+        self.plotter.add('target', self.target_speed)
+        self.plotter.add('speed', self.get_speed())
+        self.plotter.add('F', F)
         if self.t >= 15:
             self.plotter.plot( [ 't', 'time'], [ [ 'target', 'Target' ],
-                                                 [ 'position', 'Current Position' ] ])
+                                                 [ 'speed', 'Current Speed' ],
+                                                 [ 'F', 'Force' ] ])
             self.plotter.show()
             return False
         else:
