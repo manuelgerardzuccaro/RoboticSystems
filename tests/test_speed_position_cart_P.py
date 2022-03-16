@@ -1,5 +1,5 @@
 #
-# test_speed_control_cart_saturation_gui.py
+# test_speed_pi_control_cart_gui_plot.py
 #
 
 import sys
@@ -21,21 +21,24 @@ class CartRobot(RoboticSystem):
         # friction = 0.8
         self.cart = Cart(1, 0.8)
         self.plotter = DataPlotter()
-        self.controller = PIDSat(3.0, 2.0, 0.0, 2.0, True) # Kp = 3, KI = 2, Sat = 2 N
-        #self.controller = PID(3.0, 2.0, 0.0) # Kp = 3, KI = 2
-        self.target_speed = 1.5 # 1.5 m/s
+        self.speed_controller = PIDSat(10.0, 8.0, 0.0, 2.0, True) # Kp = 3, KI = 2, Sat = 2 N
+        self.position_controller = PIDSat(0.8, 0.0, 0.0, 1.5) # Kp = 0.8, vmax = 1.5 m/s
+        self.target_position = 4 # 4 m/s
 
     def run(self):
-        F = self.controller.evaluate(self.delta_t, self.target_speed, self.get_speed())
+        v_target = self.position_controller.evaluate(self.delta_t, self.target_position, self.get_pose())
+        F = self.speed_controller.evaluate(self.delta_t, v_target, self.get_speed())
         self.cart.evaluate(self.delta_t, F)
         self.plotter.add('t', self.t)
-        self.plotter.add('target', self.target_speed)
+        self.plotter.add('target_speed', v_target)
         self.plotter.add('speed', self.get_speed())
-        self.plotter.add('F', F)
+        self.plotter.add('target_pos', self.target_position)
+        self.plotter.add('pos', self.get_pose())
         if self.t >= 15:
-            self.plotter.plot( [ 't', 'time'], [ [ 'target', 'Target' ],
-                                                 [ 'speed', 'Current Speed' ],
-                                                 [ 'F', 'Force' ] ])
+            self.plotter.plot( [ 't', 'time'], [ [ 'target_speed', 'Target Speed' ],
+                                                 [ 'speed', 'Current Speed' ] ])
+            self.plotter.plot( [ 't', 'time'], [ [ 'target_pos', 'Target Position' ],
+                                                 [ 'pos', 'Current Position' ] ])
             self.plotter.show()
             return False
         else:
