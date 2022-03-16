@@ -66,7 +66,9 @@ class PIDSat:
         error = target - current
         derivative  = (error - self.prev_error) / delta_t
         self.prev_error = error
-        if not(self.in_saturation):
+        if not(self.antiwindup):
+            self.i.evaluate(delta_t, target, current)
+        elif not(self.in_saturation):
             self.i.evaluate(delta_t, target, current)
         output = self.p.evaluate(target, current) + self.i.output + \
           derivative * self.kd

@@ -21,7 +21,7 @@ class CartRobot(RoboticSystem):
         # friction = 0.8
         self.cart = Cart(1, 0.8)
         self.plotter = DataPlotter()
-        self.controller = PIDSat(3.0, 2.0, 0.0, 2.0, True) # Kp = 3, KI = 2, Sat = 2 N
+        self.controller = PIDSat(6.0, 6.0, 0.0, 2.0, True) # Kp = 3, KI = 2, Sat = 2 N
         #self.controller = PID(3.0, 2.0, 0.0) # Kp = 3, KI = 2
         self.target_speed = 1.5 # 1.5 m/s
 
