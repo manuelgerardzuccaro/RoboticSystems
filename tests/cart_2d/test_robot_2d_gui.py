@@ -3,7 +3,7 @@
 #
 
 import sys
-sys.path.insert(0, '../lib')
+sys.path.insert(0, '../../lib')
 
 from models.cart2d import *
 from models.robot import *
@@ -22,7 +22,7 @@ class Cart2DRobot(RoboticSystem):
 
     def run(self):
         Force = 0.2 # 0.2 Newton
-        Torque = -0.1 # 0.1 Newton*m
+        Torque = 0.1 # 0.1 Newton*m
         self.cart.evaluate(self.delta_t, Force, Torque)
         return True
 

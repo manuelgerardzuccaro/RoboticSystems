@@ -1,9 +1,9 @@
 #
-# test_speed_pi_control_cart_gui_plot.py
+# test_position_control_with_profile_gui.py
 #
 
 import sys
-sys.path.insert(0, '../lib')
+sys.path.insert(0, '../../lib')
 
 from models.cart import *
 from models.robot import *
