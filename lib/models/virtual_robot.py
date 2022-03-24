@@ -28,6 +28,8 @@ class A_VirtualRobot:
             if self.v >= self.vmax:
                 self.v = self.vmax
                 self.phase = A_VirtualRobot.CRUISE
+            elif self.p_target - self.p <= self.decel_distance:
+                self.phase = A_VirtualRobot.DECEL
 
         elif self.phase == A_VirtualRobot.CRUISE:
             self.p = self.p + self.vmax * delta_t
