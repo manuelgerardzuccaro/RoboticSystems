@@ -62,8 +62,11 @@ class PIDSat:
         self.antiwindup = antiwindup
         self.in_saturation = False
 
-    def evaluate(self, delta_t, target, current):
-        error = target - current
+    def evaluate(self, delta_t, target, current = None):
+        if current is None:
+            error = target
+        else:
+            error = target - current
         derivative  = (error - self.prev_error) / delta_t
         self.prev_error = error
         if not(self.antiwindup):
