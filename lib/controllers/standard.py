@@ -11,6 +11,8 @@ class Proportional:
         error = target - current
         return self.kp * error
 
+    def evaluate_error(self, error):
+        return self.kp * error
 
 class Integral:
 
@@ -23,6 +25,9 @@ class Integral:
         self.output = self.output + self.ki * error * delta_t
         return self.output
 
+    def evaluate_error(self, delta_t, error):
+        self.output = self.output + self.ki * error * delta_t
+        return self.output
 
 
 class ProportionalIntegral:
@@ -62,11 +67,8 @@ class PIDSat:
         self.antiwindup = antiwindup
         self.in_saturation = False
 
-    def evaluate(self, delta_t, target, current = None):
-        if current is None:
-            error = target
-        else:
-            error = target - current
+    def evaluate(self, delta_t, target, current):
+        error = target - current
         derivative  = (error - self.prev_error) / delta_t
         self.prev_error = error
         if not(self.antiwindup):
@@ -74,6 +76,25 @@ class PIDSat:
         elif not(self.in_saturation):
             self.i.evaluate(delta_t, target, current)
         output = self.p.evaluate(target, current) + self.i.output + \
+          derivative * self.kd
+        if output > self.saturation:
+            output = self.saturation
+            self.in_saturation = True
+        elif output < -self.saturation:
+            output = - self.saturation
+            self.in_saturation = True
+        else:
+            self.in_saturation = False
+        return output
+
+    def evaluate_error(self, delta_t, error):
+        derivative  = (error - self.prev_error) / delta_t
+        self.prev_error = error
+        if not(self.antiwindup):
+            self.i.evaluate_error(delta_t, error)
+        elif not(self.in_saturation):
+            self.i.evaluate_error(delta_t, error)
+        output = self.p.evaluate_error(error) + self.i.output + \
           derivative * self.kd
         if output > self.saturation:
             output = self.saturation

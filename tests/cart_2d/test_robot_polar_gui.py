@@ -7,6 +7,8 @@ sys.path.insert(0, '../../lib')
 
 from models.cart2d import *
 from models.robot import *
+from controllers.standard import *
+from controllers.control2d import *
 from gui.gui_2d import *
 
 from PyQt5.QtWidgets import QApplication
@@ -19,18 +21,15 @@ class Cart2DRobot(RoboticSystem):
         # radius = 15cm
         # friction = 0.8
         self.cart = Cart2D(1, 0.15, 0.8, 0.8)
+        self.linear_speed_controller = PIDSat(10, 3.5, 0, 5) # 5 newton
+        self.angular_speed_controller = PIDSat(6, 10, 0, 4) # 4 newton * metro
+        self.polar_controller = Polar2DController(0.5, 2, 2.0 , 2)
 
     def run(self):
-        if self.t < 1:
-            Force = 0.5 # 0.2 Newton
-            Torque = 0 #
-        elif self.t < 2:
-            Force = 0.0 # 0.2 Newton
-            Torque = 0.5 #
-        else:
-            Force = 0.2 # 0.2 Newton
-            Torque = 0 #
-
+        (x_target, y_target) = (0.8, 0.2)
+        (v_target, w_target) = self.polar_controller.evaluate(self.delta_t, x_target, y_target, self.get_pose())
+        Force = self.linear_speed_controller.evaluate(self.delta_t, v_target, self.cart.v)
+        Torque = self.angular_speed_controller.evaluate(self.delta_t, w_target, self.cart.w)
         self.cart.evaluate(self.delta_t, Force, Torque)
         return True
 
