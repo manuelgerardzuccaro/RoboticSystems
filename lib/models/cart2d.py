@@ -28,4 +28,15 @@ class Cart2D:
         self.w = new_w
 
 
+class TwoWheelsCart2D(Cart2D):
+
+    def __init__(self, _mass, _radius, _lin_friction, _ang_friction, _traction_wheelbase):
+        super().__init__(_mass, _radius, _lin_friction, _ang_friction)
+        self.traction_wheelbase = _traction_wheelbase
+
+    def evaluate(self, delta_t, f_left, f_right):
+        f = f_left + f_right
+        t = self.traction_wheelbase * (f_right - f_left)
+        super().evaluate(delta_t, f, t)
+
 
