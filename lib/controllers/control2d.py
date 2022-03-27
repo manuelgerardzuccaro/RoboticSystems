@@ -4,6 +4,7 @@
 
 import math
 from controllers.standard import *
+from models.virtual_robot import *
 
 def normalize_angle(a):
     while a > math.pi:
@@ -38,4 +39,59 @@ class Polar2DController:
         w_target = self.angular.evaluate_error(delta_t, heading_error)
 
         return (v_target, w_target)
+
+
+class StraightLine2DMotion:
+
+    def __init__(self, _vmax, _acc, _dec):
+        self.vmax = _vmax
+        self.accel = _acc
+        self.decel = _dec
+
+    def start_motion(self, start, end):
+        (self.xs,self.ys) = start
+        (self.xe,self.ye) = end
+
+        dx = self.xe - self.xs
+        dy = self.ye - self.ys
+
+        self.heading = math.atan2(dy , dx)
+        self.distance = math.sqrt(dx*dx + dy*dy)
+
+        self.virtual_robot = VirtualRobot(self.distance, self.vmax, self.accel, self.decel)
+
+    def evaluate(self, delta_t):
+        self.virtual_robot.evaluate(delta_t)
+
+        xt = self.xs + self.virtual_robot.p * math.cos(self.heading)
+        yt = self.ys + self.virtual_robot.p * math.sin(self.heading)
+
+        return (xt, yt)
+
+
+class Path2D:
+
+    def __init__(self, _vmax, _acc, _dec, _threshold):
+        self.threshold = _threshold
+        self.path = [ ]
+        self.trajectory = StraightLine2DMotion(_vmax, _acc, _dec)
+
+    def set_path(self, path):
+        self.path = path
+
+    def start(self, start_pos):
+        self.current_target = self.path.pop(0)
+        self.trajectory.start_motion(start_pos, self.current_target)
+
+    def evaluate(self, delta_t, pose):
+        (x, y) = self.trajectory.evaluate(delta_t)
+        target_distance = math.hypot(pose[0] - self.current_target[0],
+                                     pose[1] - self.current_target[1])
+        if target_distance < self.threshold:
+            if len(self.path) == 0:
+                return None
+            else:
+                self.start( (x,y) )
+
+        return (x,y)
 
