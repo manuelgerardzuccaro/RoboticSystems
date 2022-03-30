@@ -5,14 +5,7 @@
 import math
 from controllers.standard import *
 from models.virtual_robot import *
-
-def normalize_angle(a):
-    while a > math.pi:
-        a = a - 2*math.pi
-    while a < - math.pi:
-        a = a + 2*math.pi
-    return a
-
+from data.geometry import *
 
 class Polar2DController:
 
@@ -85,6 +78,8 @@ class Path2D:
 
     def evaluate(self, delta_t, pose):
         (x, y) = self.trajectory.evaluate(delta_t)
+        self.x_current = x
+        self.y_current = y
         target_distance = math.hypot(pose[0] - self.current_target[0],
                                      pose[1] - self.current_target[1])
         if target_distance < self.threshold:

@@ -10,6 +10,7 @@ from models.robot import *
 from controllers.standard import *
 from controllers.control2d import *
 from gui.gui_2d import *
+from data.plot import *
 
 from PyQt5.QtWidgets import QApplication
 
@@ -23,17 +24,26 @@ class Cart2DRobot(RoboticSystem):
         self.cart = Cart2D(1, 0.15, 0.8, 0.8)
         self.linear_speed_controller = PIDSat(10, 3.5, 0, 5) # 5 newton
         self.angular_speed_controller = PIDSat(6, 10, 0, 4) # 4 newton * metro
-        self.polar_controller = Polar2DController(0.5, 2, 2.0 , 2)
+        self.polar_controller = Polar2DController(2.5, 2, 2.0 , 2)
         self.path_controller = Path2D(1.5, 2, 2, 0.01) # tolerance 1cm
         self.path_controller.set_path( [ (0.5, 0.2),
                                          (0.5, 0.4),
                                          (0.2, 0.2) ] )
         (x, y, _) = self.get_pose()
         self.path_controller.start( (x,y) )
+        self.plotter = DataPlotter()
 
     def run(self):
-        target = self.path_controller.evaluate(self.delta_t, self.get_pose())
+        pose = self.get_pose()
+        target = self.path_controller.evaluate(self.delta_t, pose)
+        self.plotter.add('x', pose[0])
+        self.plotter.add('y', pose[1])
+        self.plotter.add('x_t', self.path_controller.x_current)
+        self.plotter.add('y_t', self.path_controller.y_current)
         if target is None:
+            self.plotter.plot( [ 'x', 'x' ], [ ['y', 'y'] ])
+            self.plotter.plot( [ 'x_t', 'x_t' ], [ ['y_t', 'y_t'] ])
+            self.plotter.show()
             return False
         (x_target, y_target) = target
         (v_target, w_target) = self.polar_controller.evaluate(self.delta_t, x_target, y_target, self.get_pose())
@@ -43,7 +53,7 @@ class Cart2DRobot(RoboticSystem):
         return True
 
     def get_pose(self):
-        return (self.cart.x, self.cart.y, self.cart.theta)
+        return self.cart.get_pose()
 
     def get_speed(self):
         return (self.cart.v, self.cart.w)

@@ -34,7 +34,7 @@ class Cart2DRobot(RoboticSystem):
         return True
 
     def get_pose(self):
-        return (self.cart.x, self.cart.y, self.cart.theta)
+        return self.cart.get_pose()
 
     def get_speed(self):
         return (self.cart.v, self.cart.w)
