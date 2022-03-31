@@ -4,6 +4,8 @@
 
 import math
 
+from data.geometry import *
+
 class A_VirtualRobot:
 
     ACCEL = 0
@@ -95,7 +97,7 @@ class VirtualRobot:
 
 # ------------------------------------------------------------
 
-class SpeedProfileGenerator:
+class _SpeedProfileGenerator:
 
     ACCEL = 0
     CRUISE = 1
@@ -135,3 +137,124 @@ class SpeedProfileGenerator:
 
         elif self.phase == SpeedProfileGenerator.DECEL:
             self.v = math.sqrt(2 * self.decel * distance)
+
+
+# ------------------------------------------------------------
+
+class SpeedProfileGenerator:
+
+    ACCEL = 0
+    CRUISE = 1
+    DECEL = 2
+    TARGET = 3
+    def __init__(self, _p_target, _vmax, _acc, _dec):
+        self.p_target = _p_target
+        self.vmax = _vmax
+        self.accel = _acc
+        self.decel = _dec
+        self.v = 0 # current speed
+        self.vp = 0 # current POSTIVE speed
+        self.phase = SpeedProfileGenerator.ACCEL
+        self.decel_distance = 0.5 * _vmax * _vmax / _dec
+
+    def set_target(self, p):
+        self.p_target = p
+
+    def evaluate(self, delta_t, current_pos):
+        distance = self.p_target - current_pos
+        if distance == 0:
+            self.v = 0
+            self.vp = 0
+            self.phase = SpeedProfileGenerator.TARGET
+            return 0
+        elif distance < 0:
+            distance = -distance
+            sign = -1
+        else:
+            sign = 1
+
+        if self.phase == SpeedProfileGenerator.ACCEL:
+            self.vp = self.vp + self.accel * delta_t
+            if self.vp >= self.vmax:
+                self.vp = self.vmax
+                self.phase = SpeedProfileGenerator.CRUISE
+            elif distance <= self.decel_distance:
+                v_exp = math.sqrt(2 * self.decel * distance)
+                if v_exp < self.vp:
+                    self.phase = SpeedProfileGenerator.DECEL
+
+        elif self.phase == SpeedProfileGenerator.CRUISE:
+            if distance <= self.decel_distance:
+                self.phase = SpeedProfileGenerator.DECEL
+
+        elif self.phase == SpeedProfileGenerator.DECEL:
+            self.vp = math.sqrt(2 * self.decel * distance)
+
+        self.v = sign * self.vp
+        return self.v
+
+
+# ------------------------------------------------------------
+
+class SpeedProfileGenerator2D:
+
+    ACCEL = 0
+    CRUISE = 1
+    DECEL = 2
+    TARGET = 3
+    def __init__(self, _p_target, _vmax, _acc, _dec):
+        self.p_target = _p_target
+        self.vmax = _vmax
+        self.accel = _acc
+        self.decel = _dec
+        self.v = 0 # current speed
+        self.vp = 0 # current POSTIVE speed
+        self.phase = SpeedProfileGenerator.ACCEL
+        self.decel_distance = 0.5 * _vmax * _vmax / _dec
+
+    def set_target(self, p):
+        self.p_target = p
+
+    def evaluate(self, delta_t, current_pos):
+        dx = self.p_target[0] - current_pos[0]
+        dy = self.p_target[1] - current_pos[1]
+
+        distance = math.hypot(dy, dx)
+        self.target_heading = math.atan2(dy , dx)
+
+        heading_error = normalize_angle(self.target_heading - current_pos[2])
+
+        if (heading_error > math.pi/2)or(heading_error < -math.pi/2):
+            self.target_heading = normalize_angle(self.target_heading + math.pi)
+            distance = -distance
+
+        if distance == 0:
+            self.v = 0
+            self.vp = 0
+            self.phase = SpeedProfileGenerator.TARGET
+            return 0
+        elif distance < 0:
+            distance = -distance
+            sign = -1
+        else:
+            sign = 1
+
+        if self.phase == SpeedProfileGenerator.ACCEL:
+            self.vp = self.vp + self.accel * delta_t
+            if self.vp >= self.vmax:
+                self.vp = self.vmax
+                self.phase = SpeedProfileGenerator.CRUISE
+            elif distance <= self.decel_distance:
+                v_exp = math.sqrt(2 * self.decel * distance)
+                if v_exp < self.vp:
+                    self.phase = SpeedProfileGenerator.DECEL
+
+        elif self.phase == SpeedProfileGenerator.CRUISE:
+            if distance <= self.decel_distance:
+                self.phase = SpeedProfileGenerator.DECEL
+
+        elif self.phase == SpeedProfileGenerator.DECEL:
+            self.vp = math.sqrt(2 * self.decel * distance)
+
+        self.v = sign * self.vp
+        return self.v
