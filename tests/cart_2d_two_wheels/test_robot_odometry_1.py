@@ -23,12 +23,13 @@ class Cart2DRobot(RoboticSystem):
         # friction = 0.8
         # Traction Wheels, radius = 25cm, wheelbase = 20cm
         # Sensing Wheels, radius = 2cm, wheelbase = 24cm
+        # Encoder resolution = 4000 ticks/revolution
         self.cart = TwoWheelsCart2DEncodersOdometry(20, 0.15, 0.8, 0.8,
                                                     0.25, 0.25, 0.2,
                                                     0.02, 0.02, 0.24, 2*math.pi/4000.0)
 
     def run(self):
-        Tleft = 0.5
+        Tleft = -0.8
         Tright = 0.8
         self.cart.evaluate(self.delta_t, Tleft, Tright)
         return True

@@ -25,9 +25,9 @@ class Cart2DRobot(RoboticSystem):
         self.linear_speed_controller = PIDSat(10, 3.5, 0, 5) # 5 newton
         self.angular_speed_controller = PIDSat(6, 10, 0, 4) # 4 newton * metro
 
-        self.target = (0.5, 0.2)
+        self.target = (0.8, 0.5)
         self.linear_speed_profile_controller = SpeedProfileGenerator2D(self.target, 1.5, 2, 2)
-        self.angular_speed_profile_controller = SpeedProfileGenerator(0, 2, 4, 2)
+        self.angular_speed_profile_controller = SpeedProfileGenerator(0, 2, 4, 4)
 
 
         self.plotter = DataPlotter()
@@ -48,10 +48,16 @@ class Cart2DRobot(RoboticSystem):
         self.plotter.add('y', y)
         self.plotter.add('x_target', self.target[0])
         self.plotter.add('y_target', self.target[1])
+        self.plotter.add('v_target', v_target)
+        self.plotter.add('w_target', w_target)
+        self.plotter.add('v', self.cart.v)
+        self.plotter.add('w', self.cart.w)
 
-        if self.t > 10:
+        if self.t > 5:
             self.plotter.plot ( [ 't', 'time' ],
-                                [ [ 'x', 'X'], [ 'x_target', 'X Target'] ])
+                                [ [ 'v_target', 'V Target'], [ 'v', 'V'] ])
+            self.plotter.plot ( [ 't', 'time' ],
+                                [ [ 'w_target', 'W Target'], [ 'w', 'W'] ])
             self.plotter.show()
             return False
 
