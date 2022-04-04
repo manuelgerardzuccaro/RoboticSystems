@@ -87,6 +87,8 @@ class TwoWheelsCart2DEncodersOdometry(TwoWheelsCart2DEncoders):
         self.x_r = 0
         self.y_r = 0
         self.theta_r = 0
+        self.vleft = 0
+        self.vright = 0
 
 
     def evaluate(self, delta_t, torque_left, torque_right):
