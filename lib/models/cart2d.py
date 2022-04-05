@@ -122,3 +122,41 @@ class TwoWheelsCart2DEncodersOdometry(TwoWheelsCart2DEncoders):
 
     def get_wheel_speed(self):
         return (self.vleft, self.vright)
+
+
+# --------------------------------------------------------------------------
+
+class AckermannSteering:
+
+    def __init__(self, _mass, _lin_friction,
+                       _r_traction, _traction_wheelbase_1, _traction_wheelbase_2):
+        self.M = _mass
+        self.b = _lin_friction
+        self.r_wheels = _r_traction
+        self.wb_1 = _traction_wheelbase_1
+        self.wb_2 = _traction_wheelbase_2
+
+        self.v = 0
+        self.w = 0
+        self.x = 0
+        self.y = 0
+        self.theta = 0
+
+    def evaluate(self, delta_t, torque, steering_angle):
+        _force = torque / self.r_wheels
+        new_v = self.v * (1 - self.b * delta_t / self.M) + delta_t * _force / self.M
+
+        if steering_angle == 0:
+            new_w = 0
+        else:
+            curvature_radius = self.wb_1 / math.tan(steering_angle)
+            new_w = new_v / curvature_radius
+
+        self.x = self.x + self.v * delta_t * math.cos(self.theta)
+        self.y = self.y + self.v * delta_t * math.sin(self.theta)
+        self.theta = self.theta + delta_t * self.w
+        self.v = new_v
+        self.w = new_w
+
+    def get_pose(self):
+        return (self.x, self.y, self.theta)

@@ -11,9 +11,10 @@ from PyQt5.QtWidgets import QApplication, QWidget
 
 class CartWindow(QWidget):
 
-    def __init__(self, _compound_sys):
+    def __init__(self, _compound_sys, _img = 'mobile_robot_2d.png'):
         super(CartWindow, self).__init__()
         self.compound_system = _compound_sys
+        self.image = _img
         self.initUI()
 
     def initUI(self):
@@ -22,7 +23,7 @@ class CartWindow(QWidget):
         self.show()
 
         current_path = pathlib.Path(__file__).parent.resolve()
-        image = str(current_path) + '/../icons/mobile_robot_2d.png'
+        image = str(current_path) + '/../icons/' + self.image
 
         self.robot_pic = QtGui.QPixmap(image)
 
