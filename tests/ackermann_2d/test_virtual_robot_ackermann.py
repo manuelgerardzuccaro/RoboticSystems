@@ -27,7 +27,8 @@ class AckermannRobot(RoboticSystem):
         # 5 Nm max, antiwindup
         self.speed_controller = PIDSat(2.0, 2.0, 0, 5, True)
         self.polar_controller = Polar2DController(2.0, 1.5, #kp = 2, vmax = 1.5 m/s
-                                                  1.0, math.pi/4)  # kp = 1, steering max = 45 deg
+                                                  10.0, math.pi/4)  # kp = 1, steering max = 45 deg
+
         self.trajectory = StraightLine2DMotion(1.5, 2, 2) # vmax = 1.5 m/s, acc/dec = 2 m/s2
         (x,y,_) = self.get_pose()
         self.trajectory.start_motion( (x,y), (0.5, 0.4) )
