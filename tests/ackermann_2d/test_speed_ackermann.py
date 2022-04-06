@@ -7,6 +7,8 @@ sys.path.insert(0, '../../lib')
 
 from models.cart2d import *
 from models.robot import *
+from controllers.standard import *
+from data.plot import *
 from gui.gui_2d import *
 
 from PyQt5.QtWidgets import QApplication
@@ -20,13 +22,30 @@ class AckermannRobot(RoboticSystem):
         # wheels radius = 2cm
         # friction = 0.8
         self.car = AckermannSteering(10, 0.8, 0.02, 0.15)
+        # 5 Nm max, antiwindup
+        self.speed_controller = PIDSat(2.0, 2.0, 0, 5, True)
+        self.plotter = DataPlotter()
 
     def run(self):
-        Torque = 0.02
-        Steering = math.radians(10)
+        (v, w) = self.get_speed()
+        vref = 1.5
+
+        Torque = self.speed_controller.evaluate(self.delta_t, vref, v)
+        Steering = 0
 
         self.car.evaluate(self.delta_t, Torque, Steering)
-        return True
+
+        self.plotter.add('t', self.t)
+        self.plotter.add('vref', vref)
+        self.plotter.add('v', v)
+
+        if self.t > 2:
+            self.plotter.plot( [ 't', 'Time' ], [ [ 'v', 'V'],
+                                                  [ 'vref', 'Vref'] ])
+            self.plotter.show()
+            return False
+        else:
+            return True
 
     def get_pose(self):
         return self.car.get_pose()
