@@ -34,7 +34,7 @@ class Cart2DRobot(RoboticSystem):
         # 5 Nm of max torque, antiwindup
         self.left_controller = PIDSat(8.0, 3.0, 0.0, 5, True)
         self.right_controller = PIDSat(8.0, 3.0, 0.0, 5, True)
-        self.reference = RampSat(1.5, 2.0)  # acc = 1.5m/s2, vmax = 2.0
+        self.reference = RampSat(1.5, 2.0)  # acc = 1.5m/s2, vmax = 2.0 m/s
 
     def run(self):
         (vl, vr) = self.cart.get_wheel_speed()

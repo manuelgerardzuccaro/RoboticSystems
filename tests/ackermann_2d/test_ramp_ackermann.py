@@ -7,8 +7,8 @@ sys.path.insert(0, '../../lib')
 
 from models.cart2d import *
 from models.robot import *
+from models.inputs import *
 from controllers.standard import *
-from controllers.control2d import *
 from data.plot import *
 from gui.gui_2d import *
 
@@ -25,20 +25,29 @@ class AckermannRobot(RoboticSystem):
         self.car = AckermannSteering(10, 0.8, 0.02, 0.15)
         # 5 Nm max, antiwindup
         self.speed_controller = PIDSat(8.0, 2.0, 0, 5, True)
-        self.polar_controller = Polar2DController(1.0, 2.0, #kp = 1, vmax = 2 m/s
-                                                  30.0, math.pi/4)  # kp = 1, steering max = 45 deg
+        self.reference = RampSat(1.5, 2.0) # acc = 1.5 m/s2, vamax = 2 m/s
+        self.plotter = DataPlotter()
 
     def run(self):
-        (vref, steering) = self.polar_controller.evaluate(self.delta_t,
-                                                          0.5, 0.4,
-                                                          self.get_pose())
         (v, w) = self.get_speed()
+        vref = self.reference.evaluate(self.delta_t)
 
-        torque = self.speed_controller.evaluate(self.delta_t, vref, v)
+        Torque = self.speed_controller.evaluate(self.delta_t, vref, v)
+        Steering = 0
 
-        self.car.evaluate(self.delta_t, torque, steering)
+        self.car.evaluate(self.delta_t, Torque, Steering)
 
-        return True
+        self.plotter.add('t', self.t)
+        self.plotter.add('vref', vref)
+        self.plotter.add('v', v)
+
+        if self.t > 3:
+            self.plotter.plot( [ 't', 'Time' ], [ [ 'v', 'V'],
+                                                  [ 'vref', 'Vref'] ])
+            self.plotter.show()
+            return False
+        else:
+            return True
 
     def get_pose(self):
         return self.car.get_pose()
