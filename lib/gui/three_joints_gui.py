@@ -21,7 +21,7 @@ class ManipulatorWindow(QWidget):
         self.setWindowTitle('Robotic Arm Simulator')
         self.show()
 
-        self.delta_t = 1e-3 # 1ms of time-tick
+        self.delta_t = self.compound_system.delta_t
 
         self._timer_painter = QtCore.QTimer(self)
         self._timer_painter.start(self.delta_t * 1000)
