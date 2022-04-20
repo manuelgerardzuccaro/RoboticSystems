@@ -26,8 +26,8 @@ class ManipulatorRobot(RoboticSystem):
         self.arm.evaluate(self.delta_t, t1, t2, t3)
         return True
 
-    def get_pose(self):
-        return self.arm.get_pose()
+    def get_joint_positions(self):
+        return self.arm.get_joint_positions()
 
     def get_pose_degrees(self):
         return self.arm.get_pose_degrees()

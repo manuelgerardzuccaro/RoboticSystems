@@ -46,7 +46,7 @@ class ThreeJointsPlanarArm:
                  math.degrees(self.element_2.theta),
                  math.degrees(self.element_3.theta) )
 
-    def get_pose(self):
+    def get_joint_positions(self):
         (x1, y1) = self.element_1.get_pose()
 
         (_x2, _y2) = self.element_2.get_pose()

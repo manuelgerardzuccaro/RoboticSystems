@@ -49,7 +49,7 @@ class ManipulatorWindow(QWidget):
         qp.setPen(QtCore.Qt.black)
 
         th = self.compound_system.get_pose_degrees()
-        p = self.compound_system.get_pose()
+        p = self.compound_system.get_joint_positions()
         (x1, y1) = p[0]
         (x2, y2) = p[1]
         (x3, y3) = p[2]
