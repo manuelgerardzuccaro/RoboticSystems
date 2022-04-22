@@ -27,7 +27,7 @@ class ManipulatorRobot(RoboticSystem):
                                         20, True) # 20Nm max torque, antiwindup
 
         # joint 2
-        self.speed_control_2 = PIDSat(400, 100, 0,
+        self.speed_control_2 = PIDSat(300, 100, 0,
                                         20, True) # 20Nm max torque, antiwindup
 
         # joint 3
@@ -40,10 +40,10 @@ class ManipulatorRobot(RoboticSystem):
 
         self.plotter = DataPlotter()
 
-        self.theta1 = math.radians(40)
-        self.theta2 = math.radians(-40)
-        self.theta3 = math.radians(-80)
-        #(self.theta1, self.theta2, self.theta3) = self.arm.inverse_kinematics(0.3, 0.2, math.radians(-90))
+        #self.theta1 = math.radians(0)
+        #self.theta2 = math.radians(0)
+        #self.theta3 = math.radians(40)
+        (self.theta1, self.theta2, self.theta3) = self.arm.inverse_kinematics(0.2, 0.1, math.radians(-90))
 
 
     def run(self):
@@ -53,14 +53,14 @@ class ManipulatorRobot(RoboticSystem):
         wref_3 = self.pos_control_3.evaluate(self.delta_t, self.theta3, self.arm.element_3.theta)
 
         torque1 = self.speed_control_1.evaluate(self.delta_t, wref_1, self.arm.element_1.w)
-        torque2 = self.speed_control_1.evaluate(self.delta_t, wref_2, self.arm.element_2.w)
-        torque3 = self.speed_control_1.evaluate(self.delta_t, wref_3, self.arm.element_3.w)
+        torque2 = self.speed_control_2.evaluate(self.delta_t, wref_2, self.arm.element_2.w)
+        torque3 = self.speed_control_3.evaluate(self.delta_t, wref_3, self.arm.element_3.w)
 
         self.arm.evaluate(self.delta_t, torque1, torque2, torque3)
 
-        self.plotter.add('Theta_ref', self.theta1)
-        self.plotter.add('Theta', self.arm.element_1.theta)
-        self.plotter.add('w', wref_1)
+        self.plotter.add('Theta_ref', self.theta3)
+        self.plotter.add('Theta', self.arm.element_3.theta)
+        self.plotter.add('w', wref_3)
         self.plotter.add('t', self.t)
 
         if self.t > 4:

@@ -28,23 +28,23 @@ class ManipulatorRobot(RoboticSystem):
                                         20, True) # 20Nm max torque, antiwindup
 
         # joint 2
-        self.speed_control_2 = PIDSat(400, 100, 0,
+        self.speed_control_2 = PIDSat(300, 100, 0,
                                         20, True) # 20Nm max torque, antiwindup
 
         # joint 3
         self.speed_control_3 = PIDSat(10, 4, 0,
                                         20, True) # 20Nm max torque, antiwindup
 
-        self.pos_control_1 = PIDSat(50, 0, 0, 2) # 2 rad/s max speed
-        self.pos_control_2 = PIDSat(50, 0, 0, 2) # 2 rad/s max speed
-        self.pos_control_3 = PIDSat(50, 0, 0, 2) # 2 rad/s max speed
+        self.pos_control_1 = PIDSat(50, 0, 0, 5) # 2 rad/s max speed
+        self.pos_control_2 = PIDSat(50, 0, 0, 5) # 2 rad/s max speed
+        self.pos_control_3 = PIDSat(50, 0, 0, 5) # 2 rad/s max speed
 
         self.trajectory = VirtualRobot2D( 1, 0.5, 0.5)
 
         (x, y, a) = self.arm.get_pose()
         self.target_x = 0.1
-        self.target_y = 0.0
-        self.target_alpha = math.radians(-90)
+        self.target_y = 0.1
+        self.target_alpha = math.radians(0)
 
         self.trajectory.set_target( (x,y), (self.target_x, self.target_y) )
 
@@ -62,21 +62,19 @@ class ManipulatorRobot(RoboticSystem):
         wref_3 = self.pos_control_3.evaluate(self.delta_t, self.theta3, self.arm.element_3.theta)
 
         torque1 = self.speed_control_1.evaluate(self.delta_t, wref_1, self.arm.element_1.w)
-        torque2 = self.speed_control_1.evaluate(self.delta_t, wref_2, self.arm.element_2.w)
-        torque3 = self.speed_control_1.evaluate(self.delta_t, wref_3, self.arm.element_3.w)
+        torque2 = self.speed_control_2.evaluate(self.delta_t, wref_2, self.arm.element_2.w)
+        torque3 = self.speed_control_3.evaluate(self.delta_t, wref_3, self.arm.element_3.w)
 
         self.arm.evaluate(self.delta_t, torque1, torque2, torque3)
 
-        self.plotter.add('Theta_ref', self.theta1)
-        self.plotter.add('Theta', self.arm.element_1.theta)
-        self.plotter.add('w', wref_1)
-        self.plotter.add('t', self.t)
+        (xr, yr, ar) = self.arm.get_pose()
+
+        self.plotter.add('x', xr)
+        self.plotter.add('y', yr)
 
         if self.t > 4:
-            self.plotter.plot( [ 't', 'Time' ],
-                               [ [ 'Theta_ref', 'Theta Ref'] , [ 'Theta', 'Theta' ] ])
-            self.plotter.plot( [ 't', 'Time' ],
-                               [ [ 'w', 'W']  ])
+            self.plotter.plot( [ 'x', 'X' ],
+                               [ [ 'y', 'Y']  ])
             self.plotter.show()
             return False
         else:

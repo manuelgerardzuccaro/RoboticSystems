@@ -27,7 +27,7 @@ class ManipulatorRobot(RoboticSystem):
                                         20, True) # 20Nm max torque, antiwindup
 
         # joint 2
-        self.speed_control_2 = PIDSat(400, 100, 0,
+        self.speed_control_2 = PIDSat(300, 100, 0,
                                         20, True) # 20Nm max torque, antiwindup
 
         # joint 3
@@ -39,19 +39,19 @@ class ManipulatorRobot(RoboticSystem):
 
     def run(self):
 
-        wref = self.ramp.evaluate(self.delta_t)
-        w = self.arm.element_1.w
-        torque = self.speed_control_1.evaluate(self.delta_t, wref, w)
+        # wref = self.ramp.evaluate(self.delta_t)
+        # w = self.arm.element_1.w
+        # torque = self.speed_control_1.evaluate(self.delta_t, wref, w)
 
         # wref = self.ramp.evaluate(self.delta_t)
         # w = self.arm.element_2.w
         # torque = self.speed_control_2.evaluate(self.delta_t, wref, w)
 
-        # wref = self.ramp.evaluate(self.delta_t)
-        # w = self.arm.element_3.w
-        # torque = self.speed_control_3.evaluate(self.delta_t, wref, w)
+        wref = self.ramp.evaluate(self.delta_t)
+        w = self.arm.element_3.w
+        torque = self.speed_control_3.evaluate(self.delta_t, wref, w)
 
-        self.arm.evaluate(self.delta_t, torque, 0, 0)
+        self.arm.evaluate(self.delta_t, 0, 0, torque)
 
         self.plotter.add('Wref', wref)
         self.plotter.add('W', w)
