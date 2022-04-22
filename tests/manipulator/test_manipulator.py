@@ -20,7 +20,7 @@ class ManipulatorRobot(RoboticSystem):
                                         0.8)
 
     def run(self):
-        t1 = 4.0
+        t1 = -4.0
         t2 = 5.0
         t3 = 1.0
         self.arm.evaluate(self.delta_t, t1, t2, t3)

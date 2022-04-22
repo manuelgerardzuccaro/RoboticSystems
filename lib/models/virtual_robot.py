@@ -97,6 +97,35 @@ class VirtualRobot:
 
 # ------------------------------------------------------------
 
+class VirtualRobot2D:
+
+    ACCEL = 0
+    CRUISE = 1
+    DECEL = 2
+    TARGET = 3
+    def __init__(self, _vmax, _acc, _dec):
+        self.linear_trajectory = VirtualRobot(0, _vmax, _acc, _dec)
+
+    def set_target(self, starting, target):
+        self.starting = starting
+        dx = target[0] - starting[0]
+        dy = target[1] - starting[1]
+
+        self.linear_target = math.hypot(dx,dy)
+        self.target_heading = math.atan2(dy,dx)
+
+        self.linear_trajectory.p_target = self.linear_target
+
+
+    def evaluate(self, delta_t):
+        self.linear_trajectory.evaluate(delta_t)
+        x = self.starting[0] + self.linear_trajectory.p * math.cos(self.target_heading)
+        y = self.starting[1] + self.linear_trajectory.p * math.sin(self.target_heading)
+        return (x,y)
+
+
+# ------------------------------------------------------------
+
 class _SpeedProfileGenerator:
 
     ACCEL = 0

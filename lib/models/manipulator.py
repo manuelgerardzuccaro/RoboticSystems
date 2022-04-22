@@ -57,3 +57,23 @@ class ThreeJointsPlanarArm:
 
         return [ (x1, y1), (x2, y2), (x3, y3) ]
 
+    def get_pose(self):
+        (x1, y1) = self.element_1.get_pose()
+
+        (_x2, _y2) = self.element_2.get_pose()
+        (x2, y2) = local_to_global(x1, y1, self.element_1.theta, _x2, _y2)
+
+        alpha = self.element_1.theta + self.element_2.theta + self.element_3.theta
+
+        return (x2, y2, alpha)
+
+    def inverse_kinematics(self, xt, yt, alpha):
+        atan_den = (xt**2 + yt ** 2 - self.element_1.L ** 2 - self.element_2.L ** 2) / (2 * self.element_1.L * self.element_2.L )
+        arg = 1 - atan_den**2
+        if arg < 0:
+            return (None, None, None)
+        theta2 = math.atan2( - math.sqrt( arg ), atan_den )
+        theta1 = math.atan2(yt, xt) - math.atan2(self.element_2.L * math.sin(theta2),
+                                                 self.element_1.L + self.element_2.L * math.cos(theta2) )
+        theta3 = alpha - theta1 - theta2
+        return (theta1, theta2, theta3)

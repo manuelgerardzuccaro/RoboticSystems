@@ -1,5 +1,5 @@
 #
-# test_manipulator_speeds.py
+# test_manipulator_pos.py
 #
 
 import sys
@@ -34,35 +34,40 @@ class ManipulatorRobot(RoboticSystem):
         self.speed_control_3 = PIDSat(10, 4, 0,
                                         20, True) # 20Nm max torque, antiwindup
 
-        self.ramp = RampSat(2, 2)
+        self.pos_control_1 = PIDSat(50, 0, 0, 2) # 2 rad/s max speed
+        self.pos_control_2 = PIDSat(50, 0, 0, 2) # 2 rad/s max speed
+        self.pos_control_3 = PIDSat(50, 0, 0, 2) # 2 rad/s max speed
+
         self.plotter = DataPlotter()
+
+        self.theta1 = math.radians(40)
+        self.theta2 = math.radians(-40)
+        self.theta3 = math.radians(-80)
+        #(self.theta1, self.theta2, self.theta3) = self.arm.inverse_kinematics(0.3, 0.2, math.radians(-90))
+
 
     def run(self):
 
-        wref = self.ramp.evaluate(self.delta_t)
-        w = self.arm.element_1.w
-        torque = self.speed_control_1.evaluate(self.delta_t, wref, w)
+        wref_1 = self.pos_control_1.evaluate(self.delta_t, self.theta1, self.arm.element_1.theta)
+        wref_2 = self.pos_control_2.evaluate(self.delta_t, self.theta2, self.arm.element_2.theta)
+        wref_3 = self.pos_control_3.evaluate(self.delta_t, self.theta3, self.arm.element_3.theta)
 
-        # wref = self.ramp.evaluate(self.delta_t)
-        # w = self.arm.element_2.w
-        # torque = self.speed_control_2.evaluate(self.delta_t, wref, w)
+        torque1 = self.speed_control_1.evaluate(self.delta_t, wref_1, self.arm.element_1.w)
+        torque2 = self.speed_control_1.evaluate(self.delta_t, wref_2, self.arm.element_2.w)
+        torque3 = self.speed_control_1.evaluate(self.delta_t, wref_3, self.arm.element_3.w)
 
-        # wref = self.ramp.evaluate(self.delta_t)
-        # w = self.arm.element_3.w
-        # torque = self.speed_control_3.evaluate(self.delta_t, wref, w)
+        self.arm.evaluate(self.delta_t, torque1, torque2, torque3)
 
-        self.arm.evaluate(self.delta_t, torque, 0, 0)
-
-        self.plotter.add('Wref', wref)
-        self.plotter.add('W', w)
-        self.plotter.add('T', torque)
+        self.plotter.add('Theta_ref', self.theta1)
+        self.plotter.add('Theta', self.arm.element_1.theta)
+        self.plotter.add('w', wref_1)
         self.plotter.add('t', self.t)
 
         if self.t > 4:
             self.plotter.plot( [ 't', 'Time' ],
-                               [ [ 'Wref', 'omega-Ref'] , [ 'W', 'omega' ] ])
+                               [ [ 'Theta_ref', 'Theta Ref'] , [ 'Theta', 'Theta' ] ])
             self.plotter.plot( [ 't', 'Time' ],
-                               [ [ 'T', 'Torque']  ])
+                               [ [ 'w', 'W']  ])
             self.plotter.show()
             return False
         else:
