@@ -15,11 +15,11 @@ class MultirotorRobot(RoboticSystem):
 
     def __init__(self):
         super().__init__(1e-3) # delta_t = 1e-3
-        self.MR = Multirotor2D(0.5, 0.2) # 0.5kg, L = 20cm
+        self.MR = Multirotor2D(1.0, 0.25) # 1.0kg, L = 25cm
 
     def run(self):
-        f1 = 4.0
-        f2 = 3.0
+        f1 = 5.0
+        f2 = 5.0
         self.MR.evaluate(self.delta_t, f1, f2)
         return True
 
