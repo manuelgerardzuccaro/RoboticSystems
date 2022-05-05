@@ -284,9 +284,10 @@
     -->
 
 
+  <plugin name="control" filename="libcontrol_plugin.so"/>
+  <!--
   <plugin name="pose" filename="libpose_plugin.so"/>
   <plugin name="tester" filename="libtester_plugin.so"/>
-  <!--
 
     <plugin name="encoder" filename="libencoder_plugin.so">
       <topic>~/encoders</topic>
