@@ -510,7 +510,7 @@
     </joint>
     <static>0</static>
 
-    <plugin name="tester" filename="libtest_quad_plugin.so"/>
+    <!-- plugin name="tester" filename="libtest_quad_plugin.so"/ -->
 
   </model>
 </sdf>
