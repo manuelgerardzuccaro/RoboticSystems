@@ -17,7 +17,7 @@ void RobotControl::Load(physics::ModelPtr model, sdf::ElementPtr sdf) {
 
   lastTime = 0;
 
-  target_pos = new ignition::math::Vector3d(8, 6, 0);
+  target_pos = new ignition::math::Vector3d(5, 8, 0);
 
   distance_pid = new PID(10, 0.0, 0.0, 10);
   heading_pid = new PID(5, 0.0, 0.0, 10);
@@ -32,6 +32,7 @@ void RobotControl::Update(const common::UpdateInfo& info)
     float curr_time = model->GetWorld()->RealTime().Float();
     float delta_t = curr_time - lastTime;
 
+    // apply control algorithm after 5 seconds
     if (curr_time > 5) {
 
         // start the control after 5 seconds of simulation
