@@ -71,6 +71,8 @@ class VirtualRobot:
                      + self.accel * delta_t * delta_t / 2
             self.v = self.v + self.accel * delta_t
             distance = self.p_target - self.p
+            if distance < 0:
+                distance = 0
             if self.v >= self.vmax:
                 self.v = self.vmax
                 self.phase = VirtualRobot.CRUISE
@@ -243,6 +245,9 @@ class SpeedProfileGenerator2D:
 
     def set_target(self, p):
         self.p_target = p
+        self.v = 0 # current speed
+        self.vp = 0 # current POSTIVE speed
+        self.phase = SpeedProfileGenerator.ACCEL
 
     def evaluate(self, delta_t, current_pos):
         dx = self.p_target[0] - current_pos[0]
