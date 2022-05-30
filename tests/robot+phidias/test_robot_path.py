@@ -32,7 +32,7 @@ class Cart2DRobot(RoboticSystem):
         (x, y, _) = self.get_pose()
         self.path_controller.start( (x,y) )
         self.target_reached = False
-        self.source_agent = ''
+        self.phidias_agent = ''
         start_message_server_http(self)
 
     def run(self):
@@ -47,9 +47,9 @@ class Cart2DRobot(RoboticSystem):
         else:
             if not(self.target_reached):
                 self.target_reached = True
-                if self.source_agent != '':
+                if self.phidias_agent != '':
                     print("Target")
-                    Messaging.send_belief(self.source_agent,'target_reached',[],'robot')
+                    Messaging.send_belief(self.phidias_agent,'target_reached',[],'robot')
         return True
 
     def get_pose(self):
@@ -60,7 +60,7 @@ class Cart2DRobot(RoboticSystem):
 
     def on_belief(self, _from, name, terms):
         print(_from, name, terms)
-        self.source_agent = _from
+        self.phidias_agent = _from
         if name == 'go_to':
             self.path_controller.set_path( [ (terms[0], terms[1]) ] )
             (x, y, _) = self.get_pose()
