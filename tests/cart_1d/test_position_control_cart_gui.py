@@ -23,13 +23,7 @@ class CartRobot(RoboticSystem):
         self.target_position = 4 # 4 meters
 
     def run(self):
-    	# F = 0.2 * (self.target_position - self.get_pose)
         F = self.controller.evaluate(self.target_position, self.get_pose())
-        # F = -1 al target
-        if (self.t >= 20.0):
-        	F = F + 1
-        	
-        # se posizione corrente == target --> F = 0
         self.cart.evaluate(self.delta_t, F)
         return True
 
