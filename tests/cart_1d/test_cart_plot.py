@@ -9,7 +9,7 @@ import pylab
 
 from models.cart import *
 
-cart = Cart(1, 0.8) # mass 1 Kg, friction = 0.8
+cart = Cart(.1, 0.8) # mass 1 Kg, friction = 0.8
 
 t = 0           # beginning of events
 delta_t = 1e-3  # sampling interval = 1ms

@@ -27,7 +27,7 @@ class CartWindow(QWidget):
         self.robot_pic = QtGui.QPixmap(image)
 
         self._timer_painter = QtCore.QTimer(self)
-        self._timer_painter.start(self.compound_system.delta_t * 1000)
+        self._timer_painter.start(int(self.compound_system.delta_t * 1000))
         self._timer_painter.timeout.connect(self.go)
 
 
@@ -47,7 +47,7 @@ class CartWindow(QWidget):
         x_pos = 50 + (self.compound_system.get_pose() * 50)
         y_pos = 236
 
-        qp.drawPixmap(x_pos,y_pos,self.robot_pic)
+        qp.drawPixmap(int(x_pos),int(y_pos),self.robot_pic)
 
         qp.setPen(QtCore.Qt.black)
         qp.drawLine(0, 281, 990, 281)
