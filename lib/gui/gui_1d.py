@@ -77,7 +77,7 @@ class ArmWindow(QWidget):
         self.show()
 
         self._timer_painter = QtCore.QTimer(self)
-        self._timer_painter.start(self.compound_system.delta_t * 1000)
+        self._timer_painter.start(int(self.compound_system.delta_t * 1000))
         self._timer_painter.timeout.connect(self.go)
 
 
@@ -94,8 +94,8 @@ class ArmWindow(QWidget):
         th = self.compound_system.get_pose()
         omega = self.compound_system.get_speed()
 
-        x = 200 * self.compound_system.arm.r * math.sin(th)
-        y = 200 * self.compound_system.arm.r * math.cos(th)
+        x = int(200 * self.compound_system.arm.r * math.sin(th))
+        y = int(200 * self.compound_system.arm.r * math.cos(th))
 
         self.__draw_arm_element(qp, 500, 20, x + 500, y + 20)
 
