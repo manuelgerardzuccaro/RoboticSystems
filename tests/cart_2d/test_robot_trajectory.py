@@ -25,7 +25,7 @@ class Cart2DRobot(RoboticSystem):
         self.linear_speed_controller = PIDSat(10, 3.5, 0, 5) # 5 newton
         self.angular_speed_controller = PIDSat(6, 10, 0, 4) # 4 newton * metro
         self.polar_controller = Polar2DController(2.5, 2, 2.0 , 2)
-        self.trajectory = StraightLine2DMotion(1.5, 2, 2)
+        self.trajectory = StraightLine2DMotion(0.2, 0.5, 0.5)
         (x,y,_) = self.get_pose()
         self.trajectory.start_motion( (x,y), (0.5, 0.2) )
 
@@ -48,6 +48,8 @@ class Cart2DRobot(RoboticSystem):
         if self.t > 10:
             self.plotter.plot ( [ 't', 'time' ],
                                 [ [ 'x', 'X'], [ 'x_target', 'X Target'] ])
+            self.plotter.plot ( [ 't', 'time' ],
+                                [ [ 'y', 'Y'], [ 'y_target', 'Y Target'] ])
             self.plotter.show()
             return False
 

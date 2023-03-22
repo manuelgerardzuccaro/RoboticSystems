@@ -21,14 +21,14 @@ class Cart2DRobot(RoboticSystem):
         self.cart = Cart2D(1, 0.15, 0.8, 0.8)
 
     def run(self):
-        if self.t < 1:
-            Force = 0.5 # 0.2 Newton
+        if self.t < 3:
+            Force = 0.1 # 0.5 Newton
             Torque = 0 #
-        elif self.t < 2:
-            Force = 0.0 # 0.2 Newton
-            Torque = 0.5 #
+        elif self.t < 6:
+            Force = 0.0 #
+            Torque = 0.3 # 0.5 Nm
         else:
-            Force = 0.2 # 0.2 Newton
+            Force = 0.1 # 0.2 Newton
             Torque = 0 #
 
         self.cart.evaluate(self.delta_t, Force, Torque)

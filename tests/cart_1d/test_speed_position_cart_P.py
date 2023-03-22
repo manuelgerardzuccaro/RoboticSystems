@@ -23,7 +23,7 @@ class CartRobot(RoboticSystem):
         self.plotter = DataPlotter()
         self.speed_controller = PIDSat(10.0, 8.0, 0.0, 2.0, True) # Kp = 3, KI = 2, Sat = 2 N
         self.position_controller = PIDSat(0.8, 0.0, 0.0, 1.5) # Kp = 0.8, vmax = 1.5 m/s
-        self.target_position = 4 # 4 m/s
+        self.target_position = 4 # 4
 
     def run(self):
         v_target = self.position_controller.evaluate(self.delta_t, self.target_position, self.get_pose())

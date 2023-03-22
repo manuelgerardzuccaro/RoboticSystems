@@ -26,7 +26,7 @@ class Cart2DRobot(RoboticSystem):
         self.angular_speed_controller = PIDSat(6, 10, 0, 4) # 4 newton * metro
 
         self.target = (0.8, 0.5)
-        self.linear_speed_profile_controller = SpeedProfileGenerator2D(self.target, 1.5, 2, 2)
+        self.linear_speed_profile_controller = SpeedProfileGenerator2D(self.target, 0.2, 0.5, 0.5)
         self.angular_speed_profile_controller = SpeedProfileGenerator(0, 2, 4, 4)
 
 

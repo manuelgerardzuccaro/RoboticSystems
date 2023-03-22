@@ -27,7 +27,7 @@ class CartRobot(RoboticSystem):
                                         1.0, # accel 1 m/s2
                                         1.0) # decel 1 m/s2
         self.speed_controller = PIDSat(10.0, 8.0, 0.0, 2.0, True) # Kp = 3, KI = 2, Sat = 2 N
-        self.position_controller = PIDSat(8.0, 0.0, 0.8, 1.5) # Kp = 8.0, Kd = 0.8, vmax = 1.5 m/s
+        self.position_controller = PIDSat(4.0, 0.0, 0.8, 1.5) # Kp = 8.0, Kd = 0.8, vmax = 1.5 m/s
 
     def run(self):
         self.trajectory.evaluate(self.delta_t)

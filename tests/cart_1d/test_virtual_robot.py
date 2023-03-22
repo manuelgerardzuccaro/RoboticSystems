@@ -8,7 +8,7 @@ sys.path.insert(0, '../../lib')
 from models.virtual_robot import *
 from data.plot import *
 
-rob =   VirtualRobot(   0.3, # distance 2 m
+rob =   VirtualRobot(   0.8, # distance 2 m
                         1.5, # max speed 1.5 m/s
                         3.0, # accel 3 m/s2
                         2.0) # decel 2 m/s2
