@@ -30,7 +30,7 @@ class MultirotorWindow(QWidget):
         self.delta_t = 1e-3 # 1ms of time-tick
 
         self._timer_painter = QtCore.QTimer(self)
-        self._timer_painter.start(self.delta_t * 1000)
+        self._timer_painter.start(int(self.delta_t * 1000))
         self._timer_painter.timeout.connect(self.go)
 
 
@@ -61,8 +61,8 @@ class MultirotorWindow(QWidget):
 
         s = self.drone.size()
 
-        x_pos = 50 + x*1000 - s.width() / 2
-        y_pos = 500 - z*1000 - s.height() / 2
+        x_pos = int(50 + x*1000 - s.width() / 2)
+        y_pos = int(500 - z*1000 - s.height() / 2)
 
         t = QtGui.QTransform()
         t.translate(x_pos + s.height()/2, y_pos + s.width()/2)

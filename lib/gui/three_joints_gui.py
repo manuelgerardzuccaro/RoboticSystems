@@ -24,7 +24,7 @@ class ManipulatorWindow(QWidget):
         self.delta_t = self.compound_system.delta_t
 
         self._timer_painter = QtCore.QTimer(self)
-        self._timer_painter.start(self.delta_t * 1000)
+        self._timer_painter.start(int(self.delta_t * 1000))
         self._timer_painter.timeout.connect(self.go)
 
 
@@ -71,6 +71,10 @@ class ManipulatorWindow(QWidget):
         qp.end()
 
     def __draw_arm_element(self, qp, x1, y1, x2, y2, ellipse=True):
+        x1 = int(x1)
+        x2 = int(x2)
+        y1 = int(y1)
+        y2 = int(y2)
         qp.setPen(QtGui.QPen(QtCore.Qt.black, 8))
         qp.drawLine(x1, y1, x2, y2)
 
