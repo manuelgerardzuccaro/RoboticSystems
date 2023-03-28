@@ -3,11 +3,14 @@
 #
 
 import sys
-sys.path.insert(0, '../../lib')
+
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
 
 import pylab
 
-from models.cart import *
+from lib.models.cart import *
 
 cart = Cart(1, 0.8) # mass 1 Kg, friction = 0.8
 

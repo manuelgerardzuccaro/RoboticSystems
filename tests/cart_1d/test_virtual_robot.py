@@ -3,10 +3,13 @@
 #
 
 import sys
-sys.path.insert(0, '../../lib')
 
-from models.virtual_robot import *
-from data.plot import *
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.models.virtual_robot import *
+from lib.data.plot import *
 
 rob =   VirtualRobot(   0.8, # distance 2 m
                         1.5, # max speed 1.5 m/s

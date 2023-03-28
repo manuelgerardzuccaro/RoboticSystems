@@ -3,13 +3,16 @@
 #
 
 import sys
-sys.path.insert(0, '../../lib')
 
-from models.multirotor import *
-from models.robot import *
-from controllers.standard import *
-from gui.multirotor_gui import *
-from data.plot import *
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.models.multirotor import *
+from lib.models.robot import *
+from lib.controllers.standard import *
+from lib.gui.multirotor_gui import *
+from lib.data.plot import *
 
 from PyQt5.QtWidgets import QApplication
 

@@ -3,11 +3,14 @@
 #
 
 import sys
-sys.path.insert(0, '../lib')
+
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
 
 import numpy as np
 
-from data.plot import *
+from lib.data.plot import *
 
 class MyDiscreteSystem:
 

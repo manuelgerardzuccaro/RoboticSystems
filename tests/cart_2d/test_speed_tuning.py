@@ -3,11 +3,14 @@
 #
 
 import sys
-sys.path.insert(0, '../../lib')
 
-from models.cart2d import *
-from data.plot import *
-from controllers.standard import *
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.models.cart2d import *
+from lib.data.plot import *
+from lib.controllers.standard import *
 
 # Mass = 1kg
 # radius = 15cm

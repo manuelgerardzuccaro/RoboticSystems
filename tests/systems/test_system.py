@@ -3,9 +3,12 @@
 #
 
 import sys
-sys.path.insert(0, '../lib')
 
-from data.plot import *
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.data.plot import *
 
 class MySystem:
 

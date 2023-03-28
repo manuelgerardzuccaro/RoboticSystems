@@ -3,12 +3,15 @@
 #
 
 import sys
-sys.path.insert(0, '../../lib')
+
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
 
 import pylab
 import math
 
-from models.arm import *
+from lib.models.arm import *
 
 arm = Arm(1, 0.8, 0.6) # mass 1 Kg, friction = 0.8, r = 0.6 (60cm)
 

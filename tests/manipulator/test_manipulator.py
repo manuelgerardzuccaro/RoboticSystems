@@ -3,11 +3,14 @@
 #
 
 import sys
-sys.path.insert(0, '../../lib')
 
-from models.manipulator import *
-from models.robot import *
-from gui.three_joints_gui import *
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.models.manipulator import *
+from lib.models.robot import *
+from lib.gui.three_joints_gui import *
 
 from PyQt5.QtWidgets import QApplication
 

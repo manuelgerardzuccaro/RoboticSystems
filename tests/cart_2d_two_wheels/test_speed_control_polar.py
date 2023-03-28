@@ -3,16 +3,19 @@
 #
 
 import sys
-sys.path.insert(0, '../../lib')
+
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
 
 import math
 
-from models.cart2d import *
-from models.robot import *
-from models.inputs import *
-from controllers.standard import *
-from data.plot import *
-from gui.gui_2d import *
+from lib.models.cart2d import *
+from lib.models.robot import *
+from lib.models.inputs import *
+from lib.controllers.standard import *
+from lib.data.plot import *
+from lib.gui.gui_2d import *
 
 from PyQt5.QtWidgets import QApplication
 

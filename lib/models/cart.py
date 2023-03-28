@@ -3,7 +3,6 @@
 #
 
 class Cart:
-
     def __init__(self, _mass, _friction):
         self.M = _mass
         self.b = _friction
