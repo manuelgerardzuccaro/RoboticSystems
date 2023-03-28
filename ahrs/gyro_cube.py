@@ -5,9 +5,8 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 
 import time
-import math
 
-from imu_driver import *
+from imu_driver import IMUDriver
 
 
 verticies = (
@@ -50,11 +49,11 @@ def main():
     (width, height) = (800,600)
     pygame.display.set_mode((width, height), DOUBLEBUF|OPENGL)
 
-    glMatrixMode(GL_PROJECTION);
+    glMatrixMode(GL_PROJECTION)
 
-    glLoadIdentity();
-    gluPerspective(20, width / float(height), 5, 15);
-    glViewport(0, 0, width, height);
+    glLoadIdentity()
+    gluPerspective(20, width / float(height), 5, 15)
+    glViewport(0, 0, width, height)
 
     glMatrixMode(GL_MODELVIEW)
 
@@ -67,7 +66,7 @@ def main():
     p = 0 # pitch
     y = 0 # yaw
 
-    glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
