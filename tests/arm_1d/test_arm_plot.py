@@ -1,30 +1,26 @@
-#
-# test_arm_plot.py
-#
-
 import sys
+import math
 
 from pathlib import Path
+from matplotlib import pylab
+
 CURRENT_POSITION = Path(__file__).parent
 sys.path.append(f"{CURRENT_POSITION}/../../")
 
-import pylab
-import math
+from lib.models.arm import Arm
 
-from lib.models.arm import *
+arm = Arm(1, 0.8, 0.6)  # mass 1 Kg, friction = 0.8, r = 0.6 (60cm)
 
-arm = Arm(1, 0.8, 0.6) # mass 1 Kg, friction = 0.8, r = 0.6 (60cm)
-
-t = 0           # beginning of events
+t = 0  # beginning of events
 delta_t = 1e-3  # sampling interval = 1ms
 
-_input = 3      # constant input of 3 Nm
+_input = 3  # constant input of 3 Nm
 
-time_array = [ ]
-speed_array = [ ]
-position_array = [ ]
+time_array = []
+speed_array = []
+position_array = []
 
-while t < 20:   # let's simulate 20 seconds
+while t < 20:  # let's simulate 20 seconds
     time_array.append(t)
     speed_array.append(arm.omega)
     position_array.append(math.degrees(arm.theta))
@@ -42,4 +38,3 @@ pylab.xlabel('time')
 pylab.legend()
 
 pylab.show()
-

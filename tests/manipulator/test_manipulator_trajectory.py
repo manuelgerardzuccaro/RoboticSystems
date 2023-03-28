@@ -1,58 +1,54 @@
-#
-# test_manipulator_pos.py
-#
-
 import sys
 
 from pathlib import Path
+
 CURRENT_POSITION = Path(__file__).parent
 sys.path.append(f"{CURRENT_POSITION}/../../")
 
-from lib.models.manipulator import *
-from lib.models.robot import *
-from lib.models.inputs import *
-from lib.models.virtual_robot import *
-from lib.controllers.standard import *
-from lib.data.plot import *
-from lib.gui.three_joints_gui import *
+from lib.models.manipulator import ThreeJointsPlanarArm
+from lib.models.robot import RoboticSystem
+from lib.models.virtual_robot import VirtualRobot2D
+from lib.controllers.standard import PIDSat
+from lib.data.plot import DataPlotter
+from lib.gui.three_joints_gui import ManipulatorWindow
 
 from PyQt5.QtWidgets import QApplication
+
 
 class ManipulatorRobot(RoboticSystem):
 
     def __init__(self):
-        super().__init__(1e-3) # delta_t = 1e-3
+        super().__init__(1e-3)  # delta_t = 1e-3
         self.arm = ThreeJointsPlanarArm(0.2, 0.2, 0.02,
                                         0.5, 0.5, 0.5,
                                         0.8)
 
         # joint 1
         self.speed_control_1 = PIDSat(400, 100, 0,
-                                        20, True) # 20Nm max torque, antiwindup
+                                      20, True)  # 20Nm max torque, antiwindup
 
         # joint 2
         self.speed_control_2 = PIDSat(300, 100, 0,
-                                        20, True) # 20Nm max torque, antiwindup
+                                      20, True)  # 20Nm max torque, antiwindup
 
         # joint 3
         self.speed_control_3 = PIDSat(10, 4, 0,
-                                        20, True) # 20Nm max torque, antiwindup
+                                      20, True)  # 20Nm max torque, antiwindup
 
-        self.pos_control_1 = PIDSat(50, 0, 0, 5) # 2 rad/s max speed
-        self.pos_control_2 = PIDSat(50, 0, 0, 5) # 2 rad/s max speed
-        self.pos_control_3 = PIDSat(50, 0, 0, 5) # 2 rad/s max speed
+        self.pos_control_1 = PIDSat(50, 0, 0, 5)  # 2 rad/s max speed
+        self.pos_control_2 = PIDSat(50, 0, 0, 5)  # 2 rad/s max speed
+        self.pos_control_3 = PIDSat(50, 0, 0, 5)  # 2 rad/s max speed
 
-        self.trajectory = VirtualRobot2D( 1, 0.5, 0.5)
+        self.trajectory = VirtualRobot2D(1, 0.5, 0.5)
 
         (x, y, a) = self.arm.get_pose()
         self.target_x = 0.1
         self.target_y = 0.1
         self.target_alpha = math.radians(0)
 
-        self.trajectory.set_target( (x,y), (self.target_x, self.target_y) )
+        self.trajectory.set_target((x, y), (self.target_x, self.target_y))
 
         self.plotter = DataPlotter()
-
 
     def run(self):
 
@@ -76,8 +72,8 @@ class ManipulatorRobot(RoboticSystem):
         self.plotter.add('y', yr)
 
         if self.t > 4:
-            self.plotter.plot( [ 'x', 'X' ],
-                               [ [ 'y', 'Y']  ])
+            self.plotter.plot(['x', 'X'],
+                              [['y', 'Y']])
             self.plotter.show()
             return False
         else:
@@ -88,7 +84,6 @@ class ManipulatorRobot(RoboticSystem):
 
     def get_pose_degrees(self):
         return self.arm.get_pose_degrees()
-
 
 
 if __name__ == '__main__':

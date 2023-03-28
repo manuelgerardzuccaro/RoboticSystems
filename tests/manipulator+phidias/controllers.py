@@ -1,5 +1,3 @@
-# controllers.py
-
 class P_Controller:
 
     def __init__(self, kp):
@@ -46,7 +44,7 @@ class PI_SAT_Controller:
         self.saturation_flag = False
 
     def evaluate(self, u, delta_t):
-        if not(self.saturation_flag):
+        if not self.saturation_flag:
             self.integral_term = self.integral_term + u * delta_t
 
         output = self.kp * u + self.ki * self.integral_term
@@ -75,7 +73,7 @@ class PID_Sat_Controller:
 
     def evaluate(self, u, delta_t):
         error = u
-        if not(self.saturation_flag):
+        if not self.saturation_flag:
             self.integral = self.integral + error * delta_t
         deriv = (error - self.prev_error) / delta_t
         self.prev_error = error

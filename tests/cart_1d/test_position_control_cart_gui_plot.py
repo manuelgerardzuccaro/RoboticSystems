@@ -1,31 +1,28 @@
-#
-# test_position_control_cart_gui_plot.py
-#
-
 import sys
 
 from pathlib import Path
+from PyQt5.QtWidgets import QApplication
+
 CURRENT_POSITION = Path(__file__).parent
 sys.path.append(f"{CURRENT_POSITION}/../../")
 
-from lib.models.cart import *
-from lib.models.robot import *
-from lib.controllers.standard import *
-from lib.data.plot import *
-from lib.gui.gui_1d import *
+from lib.models.cart import Cart
+from lib.models.robot import RoboticSystem
+from lib.controllers.standard import Proportional
+from lib.data.plot import DataPlotter
+from lib.gui.gui_1d import CartWindow
 
-from PyQt5.QtWidgets import QApplication
 
 class CartRobot(RoboticSystem):
 
     def __init__(self):
-        super().__init__(1e-3) # delta_t = 1e-3
+        super().__init__(1e-3)  # delta_t = 1e-3
         # Mass = 1kg
         # friction = 0.8
         self.cart = Cart(1, 0.8)
         self.plotter = DataPlotter()
-        self.controller = Proportional(0.2) # Kp = 0.2
-        self.target_position = 4 # 4 meters
+        self.controller = Proportional(0.2)  # Kp = 0.2
+        self.target_position = 4  # 4 meters
 
     def run(self):
         F = self.controller.evaluate(self.target_position, self.get_pose())
@@ -34,8 +31,8 @@ class CartRobot(RoboticSystem):
         self.plotter.add('target', self.target_position)
         self.plotter.add('position', self.get_pose())
         if self.t >= 15:
-            self.plotter.plot( [ 't', 'time'], [ [ 'target', 'Target' ],
-                                                 [ 'position', 'Current Position' ] ])
+            self.plotter.plot(['t', 'time'], [['target', 'Target'],
+                                              ['position', 'Current Position']])
             self.plotter.show()
             return False
         else:

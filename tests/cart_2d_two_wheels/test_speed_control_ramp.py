@@ -1,21 +1,17 @@
-#
-# test_speed_control.py
-#
-
 import sys
+import math
 
 from pathlib import Path
+
 CURRENT_POSITION = Path(__file__).parent
 sys.path.append(f"{CURRENT_POSITION}/../../")
 
-import math
-
-from lib.models.cart2d import *
-from lib.models.robot import *
-from lib.models.inputs import *
-from lib.controllers.standard import *
-from lib.data.plot import *
-from lib.gui.gui_2d import *
+from lib.models.cart2d import TwoWheelsCart2DEncodersOdometry
+from lib.models.robot import RoboticSystem
+from lib.models.inputs import RampSat
+from lib.controllers.standard import PIDSat
+from lib.data.plot import DataPlotter
+from lib.gui.gui_2d import CartWindow
 
 from PyQt5.QtWidgets import QApplication
 
@@ -23,7 +19,7 @@ from PyQt5.QtWidgets import QApplication
 class Cart2DRobot(RoboticSystem):
 
     def __init__(self):
-        super().__init__(1e-3) # delta_t = 1e-3
+        super().__init__(1e-3)  # delta_t = 1e-3
         # Mass = 20kg
         # radius = 15cm
         # friction = 0.8
@@ -32,7 +28,7 @@ class Cart2DRobot(RoboticSystem):
         # Encoder resolution = 4000 ticks/revolution
         self.cart = TwoWheelsCart2DEncodersOdometry(20, 0.15, 0.8, 0.8,
                                                     0.025, 0.025, 0.2,
-                                                    0.02, 0.02, 0.24, 2*math.pi/4000.0)
+                                                    0.02, 0.02, 0.24, 2 * math.pi / 4000.0)
         self.plotter = DataPlotter()
         # 5 Nm of max torque, antiwindup
         self.left_controller = PIDSat(8.0, 3.0, 0.0, 5, True)
@@ -49,15 +45,15 @@ class Cart2DRobot(RoboticSystem):
 
         self.cart.evaluate(self.delta_t, Tleft, Tright)
 
-        self.plotter.add( 't', self.t)
-        self.plotter.add( 'vl', vl)
-        self.plotter.add( 'vr', vr)
-        self.plotter.add( 'vref', vref)
+        self.plotter.add('t', self.t)
+        self.plotter.add('vl', vl)
+        self.plotter.add('vr', vr)
+        self.plotter.add('vref', vref)
         if self.t > 2:
-            self.plotter.plot( ['t', 'time'] , [ [ 'vref', 'Vref' ],
-                                                 [ 'vl', 'VL' ] ])
-            self.plotter.plot( ['t', 'time'] , [ [ 'vref', 'Vref' ],
-                                                 [ 'vr', 'VR' ] ])
+            self.plotter.plot(['t', 'time'], [['vref', 'Vref'],
+                                              ['vl', 'VL']])
+            self.plotter.plot(['t', 'time'], [['vref', 'Vref'],
+                                              ['vr', 'VR']])
             self.plotter.show()
             return False
         else:

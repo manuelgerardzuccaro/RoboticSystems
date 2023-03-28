@@ -1,14 +1,7 @@
-#
-#
-#
+from PyQt5.QtGui import QPen
+from PyQt5.QtCore import Qt, QPoint
+from pose import Pose
 
-import sys
-import math
-
-from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication
-from PyQt5.QtGui import QPainter, QColor, QFont, QPixmap, QTransform, QPen
-from PyQt5.QtCore import Qt, QTimer, QPoint
-from pose import *
 
 class ArmPainter:
 
@@ -40,12 +33,12 @@ class ThreeJointsArmPainter(ArmPainter):
         (x1, y1) = p[0]
         (x2, y2) = p[1]
         (x3, y3) = p[2]
-        qp.drawText(910,  20, "X  = %6.3f m"   % (x2))
-        qp.drawText(910,  40, "Y  = %6.3f m"   % (y2))
-        qp.drawText(910,  60, "Th1= %6.3f deg" % (th[0]))
-        qp.drawText(910,  80, "Th2= %6.3f deg" % (th[1]))
+        qp.drawText(910, 20, "X  = %6.3f m" % (x2))
+        qp.drawText(910, 40, "Y  = %6.3f m" % (y2))
+        qp.drawText(910, 60, "Th1= %6.3f deg" % (th[0]))
+        qp.drawText(910, 80, "Th2= %6.3f deg" % (th[1]))
         qp.drawText(910, 100, "Th3= %6.3f deg" % (th[2]))
-        qp.drawText(910, 120, "T  = %6.3f s"   % (t))
+        qp.drawText(910, 120, "T  = %6.3f s" % (t))
 
         (x1_pos, y1_pos) = Pose.xy_to_pixel(x1, y1)
         (x2_pos, y2_pos) = Pose.xy_to_pixel(x2, y2)
@@ -56,8 +49,3 @@ class ThreeJointsArmPainter(ArmPainter):
         self.draw_arm_element(qp, x1_pos, y1_pos, x2_pos, y2_pos)
 
         self.draw_arm_element(qp, x2_pos, y2_pos, x3_pos, y3_pos, False)
-
-
-
-
-

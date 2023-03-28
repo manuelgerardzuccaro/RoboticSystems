@@ -1,13 +1,9 @@
-#
-# arm.py
-#
-
 import math
-from arm_model import *
-from arm_control import *
-from trajectory import *
-from geometry import *
-from pose import *
+from arm_model import ArmElement
+from arm_control import ArmControl
+from geometry import local_to_global
+from pose import Pose
+
 
 class ThreeJointsArm:
 
@@ -33,9 +29,9 @@ class ThreeJointsArm:
         self.element_3_control.evaluate(delta_t)
 
     def get_pose_degrees(self):
-        return ( math.degrees(self.element_1_model.theta),
-                 math.degrees(self.element_2_model.theta),
-                 math.degrees(self.element_3_model.theta) )
+        return (math.degrees(self.element_1_model.theta),
+                math.degrees(self.element_2_model.theta),
+                math.degrees(self.element_3_model.theta))
 
     def get_pose(self):
         (x1, y1) = self.element_1_model.get_pose()
@@ -46,7 +42,7 @@ class ThreeJointsArm:
         alpha = self.element_1_model.theta + self.element_2_model.theta + self.element_3_model.theta
         (x3, y3) = local_to_global(x2, y2, alpha, self.element_3_model.L, 0)
 
-        return [ (x1, y1), (x2, y2), (x3, y3) ]
+        return [(x1, y1), (x2, y2), (x3, y3)]
 
     def get_pose_xy_a(self):
         (x1, y1) = self.element_1_model.get_pose()
@@ -61,15 +57,16 @@ class ThreeJointsArm:
         return self.pose
 
     def inverse_kinematics(self, xt, yt, alpha):
-        atan_den = (xt**2 + yt ** 2 - self.element_1_model.L ** 2 - self.element_2_model.L ** 2) / (2 * self.element_1_model.L * self.element_2_model.L )
-        arg = 1 - atan_den**2
+        atan_den = (xt ** 2 + yt ** 2 - self.element_1_model.L ** 2 - self.element_2_model.L ** 2) / (
+                    2 * self.element_1_model.L * self.element_2_model.L)
+        arg = 1 - atan_den ** 2
         if arg < 0:
-            return (None, None, None)
-        theta2 = math.atan2( - math.sqrt( arg ), atan_den )
+            return None, None, None
+        theta2 = math.atan2(- math.sqrt(arg), atan_den)
         theta1 = math.atan2(yt, xt) - math.atan2(self.element_2_model.L * math.sin(theta2),
-                                                 self.element_1_model.L + self.element_2_model.L * math.cos(theta2) )
+                                                 self.element_1_model.L + self.element_2_model.L * math.cos(theta2))
         theta3 = math.radians(alpha) - theta1 - theta2
-        return (math.degrees(theta1), math.degrees(theta2), math.degrees(theta3))
+        return math.degrees(theta1), math.degrees(theta2), math.degrees(theta3)
 
     def set_target_xy_a(self, x, y, a):
         p = self.get_pose()
@@ -82,4 +79,3 @@ class ThreeJointsArm:
         if th1 is not None:
             self.set_target(th1, th2, th3)
         self.evaluate(delta_t)
-

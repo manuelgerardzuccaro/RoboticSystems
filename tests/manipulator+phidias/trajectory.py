@@ -1,4 +1,3 @@
-
 import math
 
 
@@ -26,7 +25,6 @@ class Trajectory:
         self.start_x = current_x
         self.start_y = current_y
 
-
     def evaluate(self, delta_t):
         distance = self.target_pos - self.virtual_pos
 
@@ -48,7 +46,7 @@ class Trajectory:
             current_accel = self.accel
 
         self.virtual_pos += self.virtual_speed * delta_t + \
-          0.5 * current_accel * delta_t * delta_t
+                            0.5 * current_accel * delta_t * delta_t
 
         self.virtual_speed += current_accel * delta_t
 
@@ -61,8 +59,6 @@ class Trajectory:
         vp_x = self.virtual_pos * math.cos(self.target_heading)
         vp_y = self.virtual_pos * math.sin(self.target_heading)
         return (self.start_x + vp_x, self.start_y + vp_y)
-
-
 
 
 class Trajectory3:
@@ -90,8 +86,8 @@ class Trajectory3:
         self.target_alpha = target_alpha
 
         # sferic coordinates
-        self.target_pos = math.sqrt(dx**2 + dy**2 + dz**2)
-        self.target_theta = math.atan2(math.hypot(dx,dy), dz)
+        self.target_pos = math.sqrt(dx ** 2 + dy ** 2 + dz ** 2)
+        self.target_theta = math.atan2(math.hypot(dx, dy), dz)
         self.target_phi = math.atan2(dy, dx)
 
         self.start_x = current_x
@@ -105,13 +101,12 @@ class Trajectory3:
         self.target_got = False
         self.target_count = 0
 
-        #print('------------------------------------------------')
-        #print(self.start_x, self.start_y, self.start_alpha)
-        #print(target_x, target_y, target_alpha)
-        #print(self.target_pos, math.degrees(self.target_theta), math.degrees(self.target_phi))
-        #import time
-        #time.sleep(1)
-
+        # print('------------------------------------------------')
+        # print(self.start_x, self.start_y, self.start_alpha)
+        # print(target_x, target_y, target_alpha)
+        # print(self.target_pos, math.degrees(self.target_theta), math.degrees(self.target_phi))
+        # import time
+        # time.sleep(1)
 
     def evaluate(self, delta_t):
         distance = self.target_pos - self.virtual_pos
@@ -134,7 +129,7 @@ class Trajectory3:
             current_accel = self.accel
 
         self.virtual_pos += self.virtual_speed * delta_t + \
-          0.5 * current_accel * delta_t * delta_t
+                            0.5 * current_accel * delta_t * delta_t
 
         self.virtual_speed += current_accel * delta_t
 
@@ -147,11 +142,11 @@ class Trajectory3:
         vp_x = self.start_x + self.virtual_pos * math.cos(self.target_phi) * math.sin(self.target_theta)
         vp_y = self.start_y + self.virtual_pos * math.sin(self.target_phi) * math.sin(self.target_theta)
         vp_a = self.start_alpha + self.virtual_pos * math.cos(self.target_theta)
-        #print(vp_x, vp_y, vp_a, distance)
+        # print(vp_x, vp_y, vp_a, distance)
 
         (cx, cy, ca) = self.arm.get_pose_xy_a().get_pose()
 
-        d = math.sqrt( (cx-self.target_x)**2 + (cy-self.target_y)**2 + (ca-self.target_alpha)**2)
+        d = math.sqrt((cx - self.target_x) ** 2 + (cy - self.target_y) ** 2 + (ca - self.target_alpha) ** 2)
 
         if d < 1e-2:
             self.target_count += 1
@@ -160,7 +155,4 @@ class Trajectory3:
         else:
             self.target_count = 0
 
-        return (vp_x, vp_y, vp_a)
-
-
-
+        return vp_x, vp_y, vp_a

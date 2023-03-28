@@ -1,32 +1,30 @@
-#
-# test_robot_2d_gui.py
-#
-
 import sys
 
 from pathlib import Path
+
 CURRENT_POSITION = Path(__file__).parent
 sys.path.append(f"{CURRENT_POSITION}/../../")
 
-from lib.models.cart2d import *
-from lib.models.robot import *
-from lib.controllers.standard import *
-from lib.controllers.control2d import *
-from lib.gui.gui_2d import *
+from lib.models.cart2d import Cart2D
+from lib.models.robot import RoboticSystem
+from lib.controllers.standard import PIDSat
+from lib.controllers.control2d import Polar2DController
+from lib.gui.gui_2d import CartWindow
 
 from PyQt5.QtWidgets import QApplication
+
 
 class Cart2DRobot(RoboticSystem):
 
     def __init__(self):
-        super().__init__(1e-3) # delta_t = 1e-3
+        super().__init__(1e-3)  # delta_t = 1e-3
         # Mass = 1kg
         # radius = 15cm
         # friction = 0.8
         self.cart = Cart2D(1, 0.15, 0.8, 0.8)
-        self.linear_speed_controller = PIDSat(10, 3.5, 0, 5) # 5 newton
-        self.angular_speed_controller = PIDSat(6, 10, 0, 4) # 4 newton * metro
-        self.polar_controller = Polar2DController(0.5, 2, 2.0 , 2) # v = 2 m/s, w = 2 rad/s
+        self.linear_speed_controller = PIDSat(10, 3.5, 0, 5)  # 5 newton
+        self.angular_speed_controller = PIDSat(6, 10, 0, 4)  # 4 newton * metro
+        self.polar_controller = Polar2DController(0.5, 2, 2.0, 2)  # v = 2 m/s, w = 2 rad/s
 
     def run(self):
         (x_target, y_target) = (0.0, 0.2)
@@ -40,7 +38,7 @@ class Cart2DRobot(RoboticSystem):
         return self.cart.get_pose()
 
     def get_speed(self):
-        return (self.cart.v, self.cart.w)
+        return self.cart.v, self.cart.w
 
 
 if __name__ == '__main__':

@@ -1,10 +1,7 @@
-#
-#
-#
-
 import math
-from controllers import *
-from profile_position_control import *
+from controllers import PI_SAT_Controller, PSAT_Controller
+from profile_position_control import ProfilePositionController
+
 
 class ArmControl:
 
@@ -31,6 +28,5 @@ class ArmControl:
         else:
             self.w_target = self.position_controller.evaluate(self.target - self.arm.theta, delta_t)
         torque = self.speed_controller.evaluate(self.w_target - self.arm.w, delta_t)
-        #print(">>", self, self.w_target, self.target)
+        # print(">>", self, self.w_target, self.target)
         self.arm.evaluate(torque, delta_t)
-
