@@ -1,14 +1,17 @@
-#
-# cart2d.py
-#
-
+from lib.data.geometry import normalize_angle
 import math
 
-from data.geometry import *
 
 class Cart2D:
 
     def __init__(self, _mass, _radius, _lin_friction, _ang_friction):
+        """
+        Defines a cylinder robot with the given mass, radius, linear and angular frictions
+        :param _mass: The mass of the cylinder robot, expressed in Kg
+        :param _radius: The radius of the cylinder
+        :param _lin_friction: The force of friction present in the system
+        :param _ang_friction: The force of friction present in the system
+        """
         self.M = _mass
         self.b = _lin_friction
         self.beta = _ang_friction
@@ -30,7 +33,7 @@ class Cart2D:
         self.w = new_w
 
     def get_pose(self):
-        return (self.x, self.y, self.theta)
+        return self.x, self.y, self.theta
 
 
 class TwoWheelsCart2D(Cart2D):
@@ -44,13 +47,14 @@ class TwoWheelsCart2D(Cart2D):
         t = self.traction_wheelbase * (f_right - f_left)
         super().evaluate(delta_t, f, t)
 
+
 # --------------------------------------------------------------------------
 
 class TwoWheelsCart2DEncoders(TwoWheelsCart2D):
 
     def __init__(self, _mass, _radius, _lin_friction, _ang_friction,
-                       _r_traction_left, _r_traction_right, _traction_wheelbase,
-                       _r_encoder_left, _r_encoder_right, _encoder_wheelbase, _encoder_resolution):
+                 _r_traction_left, _r_traction_right, _traction_wheelbase,
+                 _r_encoder_left, _r_encoder_right, _encoder_wheelbase, _encoder_resolution):
         super().__init__(_mass, _radius, _lin_friction, _ang_friction, _traction_wheelbase)
         self.r_traction_left = _r_traction_left
         self.r_traction_right = _r_traction_right
@@ -70,8 +74,11 @@ class TwoWheelsCart2DEncoders(TwoWheelsCart2D):
         vl = self.v - self.w * self.encoder_wheelbase / 2
         vr = self.v + self.w * self.encoder_wheelbase / 2
 
-        self.delta_rot_left = int((vl / self.r_encoder_left) * (delta_t / self.encoder_resolution)) * self.encoder_resolution
-        self.delta_rot_right = int((vr / self.r_encoder_right) * (delta_t / self.encoder_resolution)) * self.encoder_resolution
+        self.delta_rot_left = int(
+            (vl / self.r_encoder_left) * (delta_t / self.encoder_resolution)) * self.encoder_resolution
+        self.delta_rot_right = int(
+            (vr / self.r_encoder_right) * (delta_t / self.encoder_resolution)) * self.encoder_resolution
+
 
 # --------------------------------------------------------------------------
 
@@ -79,17 +86,16 @@ class TwoWheelsCart2DEncoders(TwoWheelsCart2D):
 class TwoWheelsCart2DEncodersOdometry(TwoWheelsCart2DEncoders):
 
     def __init__(self, _mass, _radius, _lin_friction, _ang_friction,
-                       _r_traction_left, _r_traction_right, _traction_wheelbase,
-                       _r_encoder_left, _r_encoder_right, _encoder_wheelbase, _encoder_resolution):
+                 _r_traction_left, _r_traction_right, _traction_wheelbase,
+                 _r_encoder_left, _r_encoder_right, _encoder_wheelbase, _encoder_resolution):
         super().__init__(_mass, _radius, _lin_friction, _ang_friction,
-                       _r_traction_left, _r_traction_right, _traction_wheelbase,
-                       _r_encoder_left, _r_encoder_right, _encoder_wheelbase, _encoder_resolution)
+                         _r_traction_left, _r_traction_right, _traction_wheelbase,
+                         _r_encoder_left, _r_encoder_right, _encoder_wheelbase, _encoder_resolution)
         self.x_r = 0
         self.y_r = 0
         self.theta_r = 0
         self.vleft = 0
         self.vright = 0
-
 
     def evaluate(self, delta_t, torque_left, torque_right):
         super().evaluate(delta_t, torque_left, torque_right)
@@ -113,15 +119,14 @@ class TwoWheelsCart2DEncodersOdometry(TwoWheelsCart2DEncoders):
         self.y_r = self.y_r + delta_p * math.sin(self.theta_r + delta_theta / 2)
         self.theta_r = normalize_angle(self.theta_r + delta_theta)
 
-
     def get_pose(self):
-        return (self.x_r, self.y_r, self.theta_r)
+        return self.x_r, self.y_r, self.theta_r
 
     def get_speed(self):
-        return (self.v_r, self.w_r)
+        return self.v_r, self.w_r
 
     def get_wheel_speed(self):
-        return (self.vleft, self.vright)
+        return self.vleft, self.vright
 
 
 # --------------------------------------------------------------------------
@@ -129,7 +134,7 @@ class TwoWheelsCart2DEncodersOdometry(TwoWheelsCart2DEncoders):
 class AckermannSteering:
 
     def __init__(self, _mass, _lin_friction,
-                       _r_traction, _lateral_wheelbase):
+                 _r_traction, _lateral_wheelbase):
         self.M = _mass
         self.b = _lin_friction
         self.r_wheels = _r_traction
@@ -140,7 +145,6 @@ class AckermannSteering:
         self.x = 0
         self.y = 0
         self.theta = 0
-
 
     def evaluate(self, delta_t, torque, steering_angle):
         _force = torque / self.r_wheels
@@ -158,11 +162,8 @@ class AckermannSteering:
         self.v = new_v
         self.w = new_w
 
-
     def get_pose(self):
-        return (self.x, self.y, self.theta)
-
+        return self.x, self.y, self.theta
 
     def get_speed(self):
-        return (self.v, self.w)
-
+        return self.v, self.w

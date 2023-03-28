@@ -1,16 +1,13 @@
-#
-# control2d.py
-#
-
 import math
-from controllers.standard import *
-from models.virtual_robot import *
-from data.geometry import *
+from lib.controllers.standard import PIDSat
+from lib.models.virtual_robot import VirtualRobot
+from lib.data.geometry import normalize_angle
+
 
 class Polar2DController:
 
     def __init__(self, KP_linear, v_max, KP_heading, w_max):
-        self.linear  = PIDSat(KP_linear, 0, 0, v_max)
+        self.linear = PIDSat(KP_linear, 0, 0, v_max)
         self.angular = PIDSat(KP_heading, 0, 0, w_max)
 
     def evaluate(self, delta_t, xt, yt, current_pose):
@@ -19,19 +16,19 @@ class Polar2DController:
         dx = xt - x
         dy = yt - y
 
-        target_heading = math.atan2(dy , dx)
+        target_heading = math.atan2(dy, dx)
 
-        distance = math.sqrt(dx*dx + dy*dy)
+        distance = math.sqrt(dx * dx + dy * dy)
         heading_error = normalize_angle(target_heading - theta)
 
-        if (heading_error > math.pi/2)or(heading_error < -math.pi/2):
+        if (heading_error > math.pi / 2) or (heading_error < -math.pi / 2):
             distance = -distance
             heading_error = normalize_angle(heading_error + math.pi)
 
         v_target = self.linear.evaluate_error(delta_t, distance)
         w_target = self.angular.evaluate_error(delta_t, heading_error)
 
-        return (v_target, w_target)
+        return v_target, w_target
 
 
 class StraightLine2DMotion:
@@ -42,14 +39,14 @@ class StraightLine2DMotion:
         self.decel = _dec
 
     def start_motion(self, start, end):
-        (self.xs,self.ys) = start
-        (self.xe,self.ye) = end
+        (self.xs, self.ys) = start
+        (self.xe, self.ye) = end
 
         dx = self.xe - self.xs
         dy = self.ye - self.ys
 
-        self.heading = math.atan2(dy , dx)
-        self.distance = math.sqrt(dx*dx + dy*dy)
+        self.heading = math.atan2(dy, dx)
+        self.distance = math.sqrt(dx * dx + dy * dy)
 
         self.virtual_robot = VirtualRobot(self.distance, self.vmax, self.accel, self.decel)
 
@@ -59,14 +56,14 @@ class StraightLine2DMotion:
         xt = self.xs + self.virtual_robot.p * math.cos(self.heading)
         yt = self.ys + self.virtual_robot.p * math.sin(self.heading)
 
-        return (xt, yt)
+        return xt, yt
 
 
 class Path2D:
 
     def __init__(self, _vmax, _acc, _dec, _threshold):
         self.threshold = _threshold
-        self.path = [ ]
+        self.path = []
         self.trajectory = StraightLine2DMotion(_vmax, _acc, _dec)
 
     def set_path(self, path):
@@ -86,7 +83,6 @@ class Path2D:
             if len(self.path) == 0:
                 return None
             else:
-                self.start( (x,y) )
+                self.start((x, y))
 
-        return (x,y)
-
+        return x, y

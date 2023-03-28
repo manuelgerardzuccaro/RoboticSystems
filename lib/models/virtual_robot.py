@@ -1,24 +1,21 @@
-#
-# virtual_robot.py
-#
-
 import math
 
-from data.geometry import *
+from lib.data.geometry import normalize_angle
+
 
 class A_VirtualRobot:
-
     ACCEL = 0
     CRUISE = 1
     DECEL = 2
     TARGET = 3
+
     def __init__(self, _p_target, _vmax, _acc, _dec):
         self.p_target = _p_target
         self.vmax = _vmax
         self.accel = _acc
         self.decel = _dec
-        self.v = 0 # current speed
-        self.p = 0 # current position
+        self.v = 0  # current speed
+        self.p = 0  # current position
         self.phase = A_VirtualRobot.ACCEL
         self.decel_distance = 0.5 * _vmax * _vmax / _dec
 
@@ -47,21 +44,22 @@ class A_VirtualRobot:
                 self.p = self.p_target
                 self.phase = A_VirtualRobot.TARGET
 
+
 # ------------------------------------------------------------
 
 class VirtualRobot:
-
     ACCEL = 0
     CRUISE = 1
     DECEL = 2
     TARGET = 3
+
     def __init__(self, _p_target, _vmax, _acc, _dec):
         self.p_target = _p_target
         self.vmax = _vmax
         self.accel = _acc
         self.decel = _dec
-        self.v = 0 # current speed
-        self.p = 0 # current position
+        self.v = 0  # current speed
+        self.p = 0  # current position
         self.phase = VirtualRobot.ACCEL
         self.decel_distance = 0.5 * _vmax * _vmax / _dec
 
@@ -100,11 +98,11 @@ class VirtualRobot:
 # ------------------------------------------------------------
 
 class VirtualRobot2D:
-
     ACCEL = 0
     CRUISE = 1
     DECEL = 2
     TARGET = 3
+
     def __init__(self, _vmax, _acc, _dec):
         self.linear_trajectory = VirtualRobot(0, _vmax, _acc, _dec)
 
@@ -113,33 +111,32 @@ class VirtualRobot2D:
         dx = target[0] - starting[0]
         dy = target[1] - starting[1]
 
-        self.linear_target = math.hypot(dx,dy)
-        self.target_heading = math.atan2(dy,dx)
+        self.linear_target = math.hypot(dx, dy)
+        self.target_heading = math.atan2(dy, dx)
 
         self.linear_trajectory.p_target = self.linear_target
-
 
     def evaluate(self, delta_t):
         self.linear_trajectory.evaluate(delta_t)
         x = self.starting[0] + self.linear_trajectory.p * math.cos(self.target_heading)
         y = self.starting[1] + self.linear_trajectory.p * math.sin(self.target_heading)
-        return (x,y)
+        return x, y
 
 
 # ------------------------------------------------------------
 
 class _SpeedProfileGenerator:
-
     ACCEL = 0
     CRUISE = 1
     DECEL = 2
     TARGET = 3
+
     def __init__(self, _p_target, _vmax, _acc, _dec):
         self.p_target = _p_target
         self.vmax = _vmax
         self.accel = _acc
         self.decel = _dec
-        self.v = 0 # current speed
+        self.v = 0  # current speed
         self.phase = SpeedProfileGenerator.ACCEL
         self.decel_distance = 0.5 * _vmax * _vmax / _dec
 
@@ -147,7 +144,7 @@ class _SpeedProfileGenerator:
         # Indeed this is not correct!!
         # We should consider that, if the target is overcome, we must go back!!
         if current_pos >= self.p_target:
-            self.v = 0	
+            self.v = 0
             self.phase = SpeedProfileGenerator.TARGET
             return
 
@@ -173,18 +170,18 @@ class _SpeedProfileGenerator:
 # ------------------------------------------------------------
 
 class SpeedProfileGenerator:
-
     ACCEL = 0
     CRUISE = 1
     DECEL = 2
     TARGET = 3
+
     def __init__(self, _p_target, _vmax, _acc, _dec):
         self.p_target = _p_target
         self.vmax = _vmax
         self.accel = _acc
         self.decel = _dec
-        self.v = 0 # current speed
-        self.vp = 0 # current POSTIVE speed
+        self.v = 0  # current speed
+        self.vp = 0  # current POSTIVE speed
         self.phase = SpeedProfileGenerator.ACCEL
         self.decel_distance = 0.5 * _vmax * _vmax / _dec
 
@@ -228,25 +225,25 @@ class SpeedProfileGenerator:
 # ------------------------------------------------------------
 
 class SpeedProfileGenerator2D:
-
     ACCEL = 0
     CRUISE = 1
     DECEL = 2
     TARGET = 3
+
     def __init__(self, _p_target, _vmax, _acc, _dec):
         self.p_target = _p_target
         self.vmax = _vmax
         self.accel = _acc
         self.decel = _dec
-        self.v = 0 # current speed
-        self.vp = 0 # current POSTIVE speed
+        self.v = 0  # current speed
+        self.vp = 0  # current POSTIVE speed
         self.phase = SpeedProfileGenerator.ACCEL
         self.decel_distance = 0.5 * _vmax * _vmax / _dec
 
     def set_target(self, p):
         self.p_target = p
-        self.v = 0 # current speed
-        self.vp = 0 # current POSTIVE speed
+        self.v = 0  # current speed
+        self.vp = 0  # current POSTIVE speed
         self.phase = SpeedProfileGenerator.ACCEL
 
     def evaluate(self, delta_t, current_pos):
@@ -254,11 +251,11 @@ class SpeedProfileGenerator2D:
         dy = self.p_target[1] - current_pos[1]
 
         distance = math.hypot(dy, dx)
-        self.target_heading = math.atan2(dy , dx)
+        self.target_heading = math.atan2(dy, dx)
 
         heading_error = normalize_angle(self.target_heading - current_pos[2])
 
-        if (heading_error > math.pi/2)or(heading_error < -math.pi/2):
+        if (heading_error > math.pi / 2) or (heading_error < -math.pi / 2):
             self.target_heading = normalize_angle(self.target_heading + math.pi)
             distance = -distance
 
