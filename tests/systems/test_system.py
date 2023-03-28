@@ -1,14 +1,12 @@
-#
-#
-#
-
 import sys
 
 from pathlib import Path
+
 CURRENT_POSITION = Path(__file__).parent
 sys.path.append(f"{CURRENT_POSITION}/../../")
 
-from lib.data.plot import *
+from lib.data.plot import DataPlotter
+
 
 class MySystem:
 
@@ -24,22 +22,20 @@ class MySystem:
         self.x2 = x2_temp
         return y
 
-t = 0           # beginning of events
+
+t = 0  # beginning of events
 delta_t = 1e-3  # sampling interval = 1ms
 
-_input = 3   # constant input
+_input = 3  # constant input
 
 mysys = MySystem()
 plotter = DataPlotter()
 
-while t < 20:   # let's simulate 10 seconds
+while t < 20:  # let's simulate 10 seconds
     y = mysys.evaluate(delta_t, _input)
     plotter.add('t', t)
     plotter.add('y', y)
     t = t + delta_t
 
-
-plotter.plot( [ 't', 'Time'], [ [ 'y', 'Output' ] ])
+plotter.plot(['t', 'Time'], [['y', 'Output']])
 plotter.show()
-
-
