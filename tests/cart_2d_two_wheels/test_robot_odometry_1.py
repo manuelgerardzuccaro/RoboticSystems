@@ -28,8 +28,8 @@ class Cart2DRobot(RoboticSystem):
                                                     0.02, 0.02, 0.24, 2 * math.pi / 4000.0)
 
     def run(self):
-        Tleft = -0.8
-        Tright = 0.8
+        Tleft = 0.05
+        Tright = 0.2
         self.cart.evaluate(self.delta_t, Tleft, Tright)
         return True
 

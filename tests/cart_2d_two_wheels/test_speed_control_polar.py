@@ -35,30 +35,29 @@ class Cart2DRobot(RoboticSystem):
 
     def run(self):
 
-        v_ref = 0.2
-        w_ref = 1.0
-
-        (vl, vr) = self.cart.get_wheel_speed()
+        v_ref = 0.05
+        w_ref = 0.5
 
         vref_l = v_ref - w_ref * self.cart.encoder_wheelbase / 2.0
         vref_r = v_ref + w_ref * self.cart.encoder_wheelbase / 2.0
 
-        # same vref
+        (vl, vr) = self.cart.get_wheel_speed()
+
         Tleft = self.left_controller.evaluate(self.delta_t, vref_l, vl)
         Tright = self.right_controller.evaluate(self.delta_t, vref_r, vr)
 
         self.cart.evaluate(self.delta_t, Tleft, Tright)
 
-        self.plotter.add('t', self.t)
-        self.plotter.add('vl', vl)
-        self.plotter.add('vr', vr)
-        self.plotter.add('vref_l', vref_l)
-        self.plotter.add('vref_r', vref_r)
-        if self.t > 2:
-            self.plotter.plot(['t', 'time'], [['vref_l', 'Vref'],
-                                              ['vl', 'VL']])
-            self.plotter.plot(['t', 'time'], [['vref_r', 'Vref'],
-                                              ['vr', 'VR']])
+        self.plotter.add( 't', self.t)
+        self.plotter.add( 'vl', vl)
+        self.plotter.add( 'vr', vr)
+        self.plotter.add( 'vref_l', vref_l)
+        self.plotter.add( 'vref_r', vref_r)
+        if self.t > 5:
+            self.plotter.plot( ['t', 'time'] , [ [ 'vref_l', 'Vref' ],
+                                                 [ 'vl', 'VL' ] ])
+            self.plotter.plot( ['t', 'time'] , [ [ 'vref_r', 'Vref' ],
+                                                 [ 'vr', 'VR' ] ])
             self.plotter.show()
             return False
         else:

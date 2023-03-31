@@ -24,12 +24,12 @@ class AckermannRobot(RoboticSystem):
         self.car = AckermannSteering(10, 0.8, 0.02, 0.15)
         # 5 Nm max, antiwindup
         self.speed_controller = PIDSat(8.0, 2.0, 0, 5, True)
-        self.polar_controller = Polar2DController(1.0, 2.0,  # kp = 1, vmax = 2 m/s
-                                                  30.0, math.pi / 4)  # kp = 1, steering max = 45 deg
+        self.polar_controller = Polar2DController(1.0, 0.1, #kp = 1, vmax = 0.3 m/s
+                                                  30.0, math.pi/4)  # kp = 30, steering max = 45 deg
 
     def run(self):
         (vref, steering) = self.polar_controller.evaluate(self.delta_t,
-                                                          0.5, 0.4,
+                                                          0.3, 0.3,
                                                           self.get_pose())
         (v, w) = self.get_speed()
 
