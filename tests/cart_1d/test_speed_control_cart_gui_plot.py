@@ -1,28 +1,28 @@
-#
-# test_speed_control_cart_gui_plot.py
-#
-
 import sys
-sys.path.insert(0, '../../lib')
 
-from models.cart import *
-from models.robot import *
-from controllers.standard import *
-from data.plot import *
-from gui.gui_1d import *
-
+from pathlib import Path
 from PyQt5.QtWidgets import QApplication
+
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.models.cart import Cart
+from lib.models.robot import RoboticSystem
+from lib.controllers.standard import Integral
+from lib.data.plot import DataPlotter
+from lib.gui.gui_1d import CartWindow
+
 
 class CartRobot(RoboticSystem):
 
     def __init__(self):
-        super().__init__(1e-3) # delta_t = 1e-3
+        super().__init__(1e-3)  # delta_t = 1e-3
         # Mass = 1kg
         # friction = 0.8
         self.cart = Cart(1, 0.8)
         self.plotter = DataPlotter()
-        self.controller = Integral(0.2) # Ki = 0.2
-        self.target_speed = 1.5 # 1.5 m/s
+        self.controller = Integral(0.2)  # Ki = 0.2
+        self.target_speed = 1.5  # 1.5 m/s
 
     def run(self):
         F = self.controller.evaluate(self.delta_t, self.target_speed, self.get_speed())
@@ -32,9 +32,9 @@ class CartRobot(RoboticSystem):
         self.plotter.add('speed', self.get_speed())
         self.plotter.add('F', F)
         if self.t >= 15:
-            self.plotter.plot( [ 't', 'time'], [ [ 'target', 'Target' ],
-                                                 [ 'speed', 'Current Speed' ],
-                                                 [ 'F', 'Force' ] ])
+            self.plotter.plot(['t', 'time'], [['target', 'Target'],
+                                              ['speed', 'Current Speed'],
+                                              ['F', 'Force']])
             self.plotter.show()
             return False
         else:

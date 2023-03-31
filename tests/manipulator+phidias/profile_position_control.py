@@ -1,5 +1,5 @@
-
 import math
+
 
 class ProfilePositionController:
 
@@ -8,10 +8,9 @@ class ProfilePositionController:
         self.__max_speed = max_speed
         self.__decel = decel
         self.__decel_distance = max_speed * max_speed / (2.0 * decel)
-        self.__output_speed = 0 # la velocita' a cui andremo
+        self.__output_speed = 0  # la velocita' a cui andremo
 
-    def evaluate(self, target_position, current_position,\
-			current_speed, delta_t):
+    def evaluate(self, target_position, current_position, current_speed, delta_t):
         distance = target_position - current_position
 
         # calcoliamo il segno e usiamo distanze sempre positive
@@ -24,16 +23,16 @@ class ProfilePositionController:
         if distance < self.__decel_distance:
             # ok siamo nella fase di decelerazione
             vel_attesa = \
-		math.sqrt(self.__max_speed * self.__max_speed - \
+                math.sqrt(self.__max_speed * self.__max_speed - \
                           2 * self.__decel * \
-			(self.__decel_distance - distance))
+                          (self.__decel_distance - distance))
             if vel_attesa > self.__output_speed:
                 # uhm... strana condizione,
                 # vuol dire che siamo ancora in accelerazione (fase 1)
                 # continuiamo ad accelerare
                 self.__output_speed += self.__accel * delta_t
                 # controlliamo se abbiamo comunque raggiunto
-		# (e superato) la velocita' attesa
+                # (e superato) la velocita' attesa
                 if self.__output_speed > vel_attesa:
                     self.__output_speed = vel_attesa
                 # evitiamo anche di superare la velocita' massima
@@ -54,5 +53,3 @@ class ProfilePositionController:
 
         # applichiamo il segno
         return s * self.__output_speed
-
-

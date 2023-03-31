@@ -1,7 +1,3 @@
-#
-#
-#
-
 class Proportional:
 
     def __init__(self, kp):
@@ -13,6 +9,7 @@ class Proportional:
 
     def evaluate_error(self, error):
         return self.kp * error
+
 
 class Integral:
 
@@ -50,15 +47,15 @@ class PID:
 
     def evaluate(self, delta_t, target, current):
         error = target - current
-        derivative  = (error - self.prev_error) / delta_t
+        derivative = (error - self.prev_error) / delta_t
         self.prev_error = error
         return self.p.evaluate(target, current) + self.i.evaluate(delta_t, target, current) + \
-          derivative * self.kd
+            derivative * self.kd
 
 
 class PIDSat:
 
-    def __init__(self, kp, ki, kd, saturation, antiwindup = False):
+    def __init__(self, kp, ki, kd, saturation, antiwindup=False):
         self.p = Proportional(kp)
         self.i = Integral(ki)
         self.kd = kd
@@ -69,14 +66,14 @@ class PIDSat:
 
     def evaluate(self, delta_t, target, current):
         error = target - current
-        derivative  = (error - self.prev_error) / delta_t
+        derivative = (error - self.prev_error) / delta_t
         self.prev_error = error
-        if not(self.antiwindup):
+        if not (self.antiwindup):
             self.i.evaluate(delta_t, target, current)
-        elif not(self.in_saturation):
+        elif not (self.in_saturation):
             self.i.evaluate(delta_t, target, current)
         output = self.p.evaluate(target, current) + self.i.output + \
-          derivative * self.kd
+                 derivative * self.kd
         if output > self.saturation:
             output = self.saturation
             self.in_saturation = True
@@ -88,14 +85,14 @@ class PIDSat:
         return output
 
     def evaluate_error(self, delta_t, error):
-        derivative  = (error - self.prev_error) / delta_t
+        derivative = (error - self.prev_error) / delta_t
         self.prev_error = error
-        if not(self.antiwindup):
+        if not (self.antiwindup):
             self.i.evaluate_error(delta_t, error)
-        elif not(self.in_saturation):
+        elif not (self.in_saturation):
             self.i.evaluate_error(delta_t, error)
         output = self.p.evaluate_error(error) + self.i.output + \
-          derivative * self.kd
+                 derivative * self.kd
         if output > self.saturation:
             output = self.saturation
             self.in_saturation = True
@@ -105,5 +102,3 @@ class PIDSat:
         else:
             self.in_saturation = False
         return output
-
-

@@ -1,16 +1,11 @@
-#
-#
-#
-
 import sys
-sys.path.insert(0, '../lib')
-
+from pathlib import Path
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../")
 import numpy as np
-from scipy.stats import norm
 import matplotlib.pyplot as plt
-
-from data.plot import *
-from imu_driver import *
+from lib.data.plot import DataPlotter
+from imu_driver import IMUDriver
 
 drv = IMUDriver()
 drv.open()
@@ -26,9 +21,8 @@ avg = np.mean(gz_array)
 for i in range(0, 1000):
     plot.add('avg', avg)
 
-plot.plot( ['i', 'Samples'], [ [ 'gz', 'Gyro Z' ], ['avg', 'Average' ] ])
+plot.plot(['i', 'Samples'], [['gz', 'Gyro Z'], ['avg', 'Average']])
 plot.show()
 
-plt.hist(gz_array,bins=100,density=True,label="Histogram of samples")
+plt.hist(gz_array, bins=100, density=True, label="Histogram of samples")
 plt.show()
-

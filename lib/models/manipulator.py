@@ -1,12 +1,8 @@
-#
-# manipulator.py
-#
-
-
 import math
-from data.geometry import *
+from lib.data.geometry import local_to_global
 
 GRAVITY = 9.81
+
 
 class ArmElement:
 
@@ -19,13 +15,14 @@ class ArmElement:
 
     def evaluate(self, delta_t, _input_torque):
         w = self.w - GRAVITY * delta_t * math.cos(self.theta) - \
-            (self.b * delta_t * self.w * self. L) / self.M + \
+            (self.b * delta_t * self.w * self.L) / self.M + \
             delta_t * _input_torque / (self.M * self.L)
         self.theta = self.theta + delta_t * self.w
         self.w = w
 
     def get_pose(self):
-        return (self.L * math.cos(self.theta), self.L * math.sin(self.theta) )
+        return self.L * math.cos(self.theta), self.L * math.sin(self.theta)
+
 
 # --------------------------------------------------------------------------------
 
@@ -42,9 +39,9 @@ class ThreeJointsPlanarArm:
         self.element_3.evaluate(delta_t, _T3)
 
     def get_pose_degrees(self):
-        return ( math.degrees(self.element_1.theta),
-                 math.degrees(self.element_2.theta),
-                 math.degrees(self.element_3.theta) )
+        return (math.degrees(self.element_1.theta),
+                math.degrees(self.element_2.theta),
+                math.degrees(self.element_3.theta))
 
     def get_joint_positions(self):
         (x1, y1) = self.element_1.get_pose()
@@ -55,7 +52,7 @@ class ThreeJointsPlanarArm:
         alpha = self.element_1.theta + self.element_2.theta + self.element_3.theta
         (x3, y3) = local_to_global(x2, y2, alpha, self.element_3.L, 0)
 
-        return [ (x1, y1), (x2, y2), (x3, y3) ]
+        return [(x1, y1), (x2, y2), (x3, y3)]
 
     def get_pose(self):
         (x1, y1) = self.element_1.get_pose()
@@ -65,15 +62,16 @@ class ThreeJointsPlanarArm:
 
         alpha = self.element_1.theta + self.element_2.theta + self.element_3.theta
 
-        return (x2, y2, alpha)
+        return x2, y2, alpha
 
     def inverse_kinematics(self, xt, yt, alpha):
-        atan_den = (xt**2 + yt ** 2 - self.element_1.L ** 2 - self.element_2.L ** 2) / (2 * self.element_1.L * self.element_2.L )
-        arg = 1 - atan_den**2
+        atan_den = (xt ** 2 + yt ** 2 - self.element_1.L ** 2 - self.element_2.L ** 2) / (
+                    2 * self.element_1.L * self.element_2.L)
+        arg = 1 - atan_den ** 2
         if arg < 0:
-            return (None, None, None)
-        theta2 = math.atan2( - math.sqrt( arg ), atan_den )
+            return None, None, None
+        theta2 = math.atan2(- math.sqrt(arg), atan_den)
         theta1 = math.atan2(yt, xt) - math.atan2(self.element_2.L * math.sin(theta2),
-                                                 self.element_1.L + self.element_2.L * math.cos(theta2) )
+                                                 self.element_1.L + self.element_2.L * math.cos(theta2))
         theta3 = alpha - theta1 - theta2
-        return (theta1, theta2, theta3)
+        return theta1, theta2, theta3

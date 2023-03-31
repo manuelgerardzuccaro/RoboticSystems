@@ -1,16 +1,18 @@
 import matplotlib
+
 matplotlib.use('Qt5Agg')
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+
 
 class RealTimeDataPlotter(QtWidgets.QWidget):
 
     def __init__(self, title, x, y, delta_t) -> None:
         super().__init__()
         self.__visible = False
-        self.data = { }
-        self.__options =  [ 'r-', 'b-', 'g-' ]
+        self.data = {}
+        self.__options = ['r-', 'b-', 'g-']
         self.setWindowTitle(title)
         self.setMinimumSize(640, 480)
         self._graph_init()
@@ -26,13 +28,13 @@ class RealTimeDataPlotter(QtWidgets.QWidget):
         self.fig.tight_layout()
         layout = QtWidgets.QVBoxLayout(self)
         layout.addWidget(self.canvas)
-    
+
     def add(self, varname, vardata):
         if varname in self.data:
             self.data[varname].append(vardata)
         else:
-            self.data[varname] = [ vardata ]
-    
+            self.data[varname] = [vardata]
+
     def plot(self, time):
         if time > self.timer + self.delta_t:
             if not self.__visible:
@@ -43,15 +45,15 @@ class RealTimeDataPlotter(QtWidgets.QWidget):
 
     def paintEvent(self, event):
         self.axes.clear()
-        [ x_axis, x_label ] = self.x
+        [x_axis, x_label] = self.x
         for i in range(0, len(self.y)):
-            self.axes.plot(self.data[x_axis], self.data[self.y[i][0]], self.__options[i], label= self.y[i][1])
+            self.axes.plot(self.data[x_axis], self.data[self.y[i][0]], self.__options[i], label=self.y[i][1])
         self.axes.set_xlabel(x_label)
         self.axes.legend()
         self.canvas.draw()
 
     def exitCall(self) -> None:
         QtWidgets.QApplication.quit()
-    
+
     def closeEvent(self, event) -> None:
         self.exitCall()

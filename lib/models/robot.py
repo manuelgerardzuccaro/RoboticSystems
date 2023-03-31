@@ -1,7 +1,3 @@
-#
-# robot.py
-#
-
 class RoboticSystem:
 
     def __init__(self, delta_t):

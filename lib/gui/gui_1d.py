@@ -1,13 +1,10 @@
-#
-# gui_1d.py
-#
-
-import sys
 import math
 import pathlib
 
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget
+
 
 class CartWindow(QWidget):
 
@@ -30,32 +27,30 @@ class CartWindow(QWidget):
         self._timer_painter.start(int(self.compound_system.delta_t * 1000))
         self._timer_painter.timeout.connect(self.go)
 
-
     def go(self):
-        if not(self.compound_system.step()):
+        if not (self.compound_system.step()):
             self._timer_painter.stop()
-        self.update() # repaint window
-
+        self.update()  # repaint window
 
     def paintEvent(self, event):
         qp = QtGui.QPainter()
         qp.begin(self)
-        qp.setPen(QtGui.QColor(255,255,255))
-        qp.setBrush(QtGui.QColor(255,255,255))
+        qp.setPen(QtGui.QColor(255, 255, 255))
+        qp.setBrush(QtGui.QColor(255, 255, 255))
         qp.drawRect(event.rect())
 
         x_pos = 50 + (self.compound_system.get_pose() * 50)
         y_pos = 236
 
-        qp.drawPixmap(int(x_pos),int(y_pos),self.robot_pic)
+        qp.drawPixmap(int(x_pos), int(y_pos), self.robot_pic)
 
-        qp.setPen(QtCore.Qt.black)
+        qp.setPen(Qt.black)
         qp.drawLine(0, 281, 990, 281)
         qp.drawLine(0, 282, 990, 282)
         qp.drawLine(990, 281, 990 - 10, 281 - 10)
         qp.drawLine(990, 282, 990 - 10, 282 + 10)
 
-        qp.drawText(850, 20, "t = %6.3f s" % (self.compound_system.t))
+        qp.drawText(850, 20, "t = %6.3f s" % self.compound_system.t)
         qp.drawText(850, 40, "P = %6.3f m" % (self.compound_system.get_pose()))
         qp.drawText(850, 60, "V = %6.3f m/s" % (self.compound_system.get_speed()))
 
@@ -80,12 +75,10 @@ class ArmWindow(QWidget):
         self._timer_painter.start(int(self.compound_system.delta_t * 1000))
         self._timer_painter.timeout.connect(self.go)
 
-
     def go(self):
-        if not(self.compound_system.step()):
+        if not (self.compound_system.step()):
             self._timer_painter.stop()
-        self.update() # repaint window
-
+        self.update()  # repaint window
 
     def paintEvent(self, event):
         qp = QtGui.QPainter()
@@ -105,19 +98,17 @@ class ArmWindow(QWidget):
 
         qp.end()
 
-
     def __draw_arm_element(self, qp, x1, y1, x2, y2, ellipse=True):
-        qp.setPen(QtGui.QPen(QtCore.Qt.black, 8))
+        qp.setPen(QtGui.QPen(Qt.black, 8))
         qp.drawLine(x1, y1, x2, y2)
 
         if ellipse:
-            qp.setPen(QtGui.QPen(QtCore.Qt.red, 3))
+            qp.setPen(QtGui.QPen(Qt.red, 3))
 
             qp.drawEllipse(QtCore.QPoint(x1, y1), 10, 10)
             qp.drawEllipse(QtCore.QPoint(x1, y1), 4, 4)
 
-            qp.setPen(QtGui.QPen(QtCore.Qt.black, 3))
+            qp.setPen(QtGui.QPen(Qt.black, 3))
 
             qp.drawEllipse(QtCore.QPoint(x2, y2), 10, 10)
             qp.drawEllipse(QtCore.QPoint(x2, y2), 4, 4)
-

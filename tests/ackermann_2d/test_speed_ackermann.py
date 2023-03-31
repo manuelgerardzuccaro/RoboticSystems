@@ -1,24 +1,22 @@
-#
-# test_robot_2d_gui.py
-#
-
 import sys
-sys.path.insert(0, '../../lib')
 
-import math
-
-from models.cart2d import *
-from models.robot import *
-from controllers.standard import *
-from data.plot import *
-from gui.gui_2d import *
-
+from pathlib import Path
 from PyQt5.QtWidgets import QApplication
+
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.models.cart2d import AckermannSteering
+from lib.models.robot import RoboticSystem
+from lib.controllers.standard import PIDSat
+from lib.data.plot import DataPlotter
+from lib.gui.gui_2d import CartWindow
+
 
 class AckermannRobot(RoboticSystem):
 
     def __init__(self):
-        super().__init__(1e-3) # delta_t = 1e-3
+        super().__init__(1e-3)  # delta_t = 1e-3
         # Mass = 10kg
         # side = 15cm
         # wheels radius = 2cm
@@ -53,7 +51,7 @@ class AckermannRobot(RoboticSystem):
         return self.car.get_pose()
 
     def get_speed(self):
-        return (self.car.v, self.car.w)
+        return self.car.v, self.car.w
 
 
 if __name__ == '__main__':

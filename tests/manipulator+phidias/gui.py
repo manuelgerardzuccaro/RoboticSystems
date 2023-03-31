@@ -1,33 +1,32 @@
-#
-#
-#
-
+import random
 import sys
 import math
-import random
 
-#
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^ use these for Qt5
 #
 #
 
-#from PyQt4 import QtGui, QtCore
+# from PyQt4 import QtGui, QtCore
 
-from arm import *
-from arm_painters import *
-from telemetry import *
-from world import *
-from phidias_interface import *
+from arm import ThreeJointsArm
+from arm_painters import ThreeJointsArmPainter
+from telemetry import Telemetry
+from trajectory import Trajectory3
+from world import World
+from phidias_interface import Messaging, start_message_server_http
+from block import Block
 
-COLOR_NAMES = [ 'black',
-                'red',
-                'green',
-                'yellow',
-                'blue',
-                'magenta',
-                'cyan' ]
+COLOR_NAMES = ['black',
+               'red',
+               'green',
+               'yellow',
+               'blue',
+               'magenta',
+               'cyan']
+
 
 class MainWindow(QWidget):
 
@@ -41,11 +40,11 @@ class MainWindow(QWidget):
         self.setWindowTitle('Robotic Arm Simulator')
         self.show()
 
-        self.delta_t = 1e-3 # 10ms of time-tick
+        self.delta_t = 1e-3  # 10ms of time-tick
         self.t = 0
 
-        self.trajectory_data = [ ]
-        self.target_trajectory_data = [ ]
+        self.trajectory_data = []
+        self.target_trajectory_data = []
 
         self.use_profile = False
         self.use_trajectory = True
@@ -80,7 +79,7 @@ class MainWindow(QWidget):
     def set_from(self, _from):
         self._from = _from
 
-    def go_to(self,target_x, target_y, target_alpha):
+    def go_to(self, target_x, target_y, target_alpha):
         self.notification = False
         self.arm.set_target_xy_a(target_x, target_y, target_alpha)
 
@@ -90,7 +89,7 @@ class MainWindow(QWidget):
         while True:
             x = int(random.uniform(1, 9)) * (Block.WIDTH + Block.GAP)
             col = int(random.uniform(0, 7))
-            if not(self.world.floor_position_busy(x)):
+            if not (self.world.floor_position_busy(x)):
                 self.world.new_block(COLOR_NAMES[col], x)
                 return
 
@@ -123,48 +122,45 @@ class MainWindow(QWidget):
             Messaging.send_belief(self._from, 'color', params, 'robot')
 
     def go(self):
-        #self.telemetry.gather(self.delta_t, self.arm.element_3_model.w, self.arm.element_3_control.w_target)
-        #if self.t > 8:
+        # self.telemetry.gather(self.delta_t, self.arm.element_3_model.w, self.arm.element_3_control.w_target)
+        # if self.t > 8:
         #    self.telemetry.show()
         #    sys.exit(0)
 
         if self.trajectory.target_got:
-            if not(self.notification):
+            if not (self.notification):
                 self.notify_target_got()
 
         self.arm.evaluate_trajectory(self.delta_t)
 
-        #p = self.arm.get_pose()
-        #self.trajectory_data.append(p[-1])
-        #if self.use_trajectory:
+        # p = self.arm.get_pose()
+        # self.trajectory_data.append(p[-1])
+        # if self.use_trajectory:
         #    self.target_trajectory_data.append( (self.arm.trajectory_x, self.arm.trajectory_y) )
         self.t += self.delta_t
-        self.update() # repaint window
-
+        self.update()  # repaint window
 
     def paintEvent(self, event):
         qp = QtGui.QPainter()
         qp.begin(self)
-        qp.setPen(QtGui.QColor(255,255,255))
-        qp.setBrush(QtGui.QColor(255,255,255))
+        qp.setPen(QtGui.QColor(255, 255, 255))
+        qp.setBrush(QtGui.QColor(255, 255, 255))
         qp.drawRect(event.rect())
 
-        qp.setPen(QtCore.Qt.black)
+        qp.setPen(Qt.black)
         qp.drawLine(50, 500, 900, 500)
         qp.drawLine(50, 500, 50, 50)
         qp.drawLine(50, 50, 900, 50)
         qp.drawLine(900, 50, 900, 500)
 
-        qp.setPen(QtCore.Qt.black)
+        qp.setPen(Qt.black)
         self.painter.paint(qp, self.t)
         self.world.paint(qp)
 
         qp.end()
 
 
-
 def main():
-
     app = QApplication(sys.argv)
     ex = MainWindow()
     start_message_server_http(ex)
@@ -173,4 +169,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

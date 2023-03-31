@@ -1,20 +1,21 @@
-#
-# test_two_wheels.py
-#
-
 import sys
-sys.path.insert(0, '../../lib')
 
-from models.cart2d import *
-from models.robot import *
-from gui.gui_2d import *
+from pathlib import Path
+
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.models.cart2d import TwoWheelsCart2D
+from lib.models.robot import RoboticSystem
+from lib.gui.gui_2d import CartWindow
 
 from PyQt5.QtWidgets import QApplication
+
 
 class Cart2DRobot(RoboticSystem):
 
     def __init__(self):
-        super().__init__(1e-3) # delta_t = 1e-3
+        super().__init__(1e-3)  # delta_t = 1e-3
         # Mass = 1kg
         # radius = 15cm
         # friction = 0.8
@@ -26,10 +27,10 @@ class Cart2DRobot(RoboticSystem):
         return True
 
     def get_pose(self):
-        return (self.cart.x, self.cart.y, self.cart.theta)
+        return self.cart.x, self.cart.y, self.cart.theta
 
     def get_speed(self):
-        return (self.cart.v, self.cart.w)
+        return self.cart.v, self.cart.w
 
 
 if __name__ == '__main__':

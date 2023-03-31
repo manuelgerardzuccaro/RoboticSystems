@@ -1,7 +1,3 @@
-#
-# inputs.py
-#
-
 class Impulse:
 
     def __init__(self, amount):
@@ -11,6 +7,7 @@ class Impulse:
         output = self.u
         self.u = 0
         return output
+
 
 # ------------------------------------------------------
 

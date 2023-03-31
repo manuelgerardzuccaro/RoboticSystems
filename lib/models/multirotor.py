@@ -1,15 +1,12 @@
-#
-#
-#
-
 import math
+
 
 class Multirotor2D:
 
     def __init__(self, _m, _L):
         self.L = _L
         self.M = _m
-        self.I = (_m*(_L/2.0)**2)/12.0
+        self.I = (_m * (_L / 2.0) ** 2) / 12.0
         self.omega = 0
         self.theta = 0
         self.b = 0.8

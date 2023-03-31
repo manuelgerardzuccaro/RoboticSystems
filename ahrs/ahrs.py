@@ -1,12 +1,8 @@
-#
-#
-#
-
 import time
 import math
 
-from imu_driver import *
-from comp_filter import *
+from imu_driver import IMUDriver
+from comp_filter import ComplementaryAHRSFilter
 
 imu = IMUDriver()
 
@@ -25,5 +21,4 @@ while True:
                 imu_data[3], imu_data[4], imu_data[5])
     last_t = t
     (r, p) = filt.get_attitude()
-    print math.degrees(r), math.degrees(p)
-
+    print(math.degrees(r), math.degrees(p))

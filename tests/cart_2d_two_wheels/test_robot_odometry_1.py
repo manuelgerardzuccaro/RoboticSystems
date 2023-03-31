@@ -1,15 +1,14 @@
-#
-# test_robot_2d_gui.py
-#
-
 import sys
-sys.path.insert(0, '../../lib')
-
 import math
 
-from models.cart2d import *
-from models.robot import *
-from gui.gui_2d import *
+from pathlib import Path
+
+CURRENT_POSITION = Path(__file__).parent
+sys.path.append(f"{CURRENT_POSITION}/../../")
+
+from lib.models.cart2d import TwoWheelsCart2DEncodersOdometry
+from lib.models.robot import RoboticSystem
+from lib.gui.gui_2d import CartWindow
 
 from PyQt5.QtWidgets import QApplication
 
@@ -17,7 +16,7 @@ from PyQt5.QtWidgets import QApplication
 class Cart2DRobot(RoboticSystem):
 
     def __init__(self):
-        super().__init__(1e-3) # delta_t = 1e-3
+        super().__init__(1e-3)  # delta_t = 1e-3
         # Mass = 20kg
         # radius = 15cm
         # friction = 0.8
@@ -26,7 +25,7 @@ class Cart2DRobot(RoboticSystem):
         # Encoder resolution = 4000 ticks/revolution
         self.cart = TwoWheelsCart2DEncodersOdometry(20, 0.15, 0.8, 0.8,
                                                     0.25, 0.25, 0.2,
-                                                    0.02, 0.02, 0.24, 2*math.pi/4000.0)
+                                                    0.02, 0.02, 0.24, 2 * math.pi / 4000.0)
 
     def run(self):
         Tleft = 0.05
