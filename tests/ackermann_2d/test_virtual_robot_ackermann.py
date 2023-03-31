@@ -12,6 +12,7 @@ from lib.models.robot import RoboticSystem
 from lib.controllers.standard import PIDSat
 from lib.controllers.control2d import Polar2DController, StraightLine2DMotion
 from lib.gui.gui_2d import CartWindow
+from lib.data.plot import DataPlotter
 
 
 class AckermannRobot(RoboticSystem):
