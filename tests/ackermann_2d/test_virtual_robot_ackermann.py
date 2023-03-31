@@ -29,9 +29,10 @@ class AckermannRobot(RoboticSystem):
         self.polar_controller = Polar2DController(2.0, 1.5, #kp = 2, vmax = 1.5 m/s
                                                   10.0, math.pi/4)  # kp = 1, steering max = 45 deg
 
-        self.trajectory = StraightLine2DMotion(1.5, 2, 2) # vmax = 1.5 m/s, acc/dec = 2 m/s2
+        self.trajectory = StraightLine2DMotion(0.2, 2, 2) # vmax = 1.5 m/s, acc/dec = 2 m/s2
         (x,y,_) = self.get_pose()
         self.trajectory.start_motion( (x,y), (0.5, 0.4) )
+        self.plotter = DataPlotter()
 
     def run(self):
         (x_target, y_target) = self.trajectory.evaluate(self.delta_t)
@@ -43,6 +44,19 @@ class AckermannRobot(RoboticSystem):
         torque = self.speed_controller.evaluate(self.delta_t, vref, v)
 
         self.car.evaluate(self.delta_t, torque, steering)
+
+        (x,y,_) = self.get_pose()
+        self.plotter.add('t', self.t)
+        self.plotter.add('x', x)
+        self.plotter.add('y', y)
+        self.plotter.add('x_target', x_target)
+        self.plotter.add('y_target', y_target)
+
+        if self.t > 10:
+            self.plotter.plot ( [ 'x', 'X' ],
+                                [ [ 'y', 'Y'] ])
+            self.plotter.show()
+            return False
 
         return True
 

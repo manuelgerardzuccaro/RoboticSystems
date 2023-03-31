@@ -5,6 +5,8 @@
 import sys
 sys.path.insert(0, '../../lib')
 
+import math
+
 from models.cart2d import *
 from models.robot import *
 from controllers.standard import *
@@ -28,7 +30,7 @@ class AckermannRobot(RoboticSystem):
 
     def run(self):
         (v, w) = self.get_speed()
-        vref = 1.5
+        vref = 0.2
 
         Torque = self.speed_controller.evaluate(self.delta_t, vref, v)
         Steering = 0
@@ -39,7 +41,7 @@ class AckermannRobot(RoboticSystem):
         self.plotter.add('vref', vref)
         self.plotter.add('v', v)
 
-        if self.t > 2:
+        if self.t > 5:
             self.plotter.plot( [ 't', 'Time' ], [ [ 'v', 'V'],
                                                   [ 'vref', 'Vref'] ])
             self.plotter.show()
