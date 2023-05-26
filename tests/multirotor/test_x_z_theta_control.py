@@ -25,7 +25,7 @@ class MultirotorRobot(RoboticSystem):
                                  15, True)  # 15 N saturation + antiwindup
         self.z_control = PIDSat(2.0, 0.0, 0.0, 2)  # 2 m/s
 
-        self.vx_control = PIDSat(1.0, 0.2, 0.15,
+        self.vx_control = PIDSat(1.0, 0.2, 0.2,
                                  math.radians(30), True)  # 15 N saturation + antiwindup
         self.x_control = PIDSat(2.0, 0.0, 0.0, 2)  # 2 m/s
 
@@ -60,15 +60,15 @@ class MultirotorRobot(RoboticSystem):
         self.plot.add('vx', vx)
         self.plot.add('vx_target', vx_target)
 
-        # if self.t >= 4:
-        #     self.plot.plot( [ 't', 'time' ],
-        #                     [ [ 'theta', 'theta' ] , [ 'theta_target', 'theta_target' ] ])
-        #     self.plot.plot( [ 't', 'time' ],
-        #                     [ [ 'vx', 'vx' ], [ 'vx_target', 'vx_target']  ])
-        #     self.plot.show()
-        #     return False
-        # else:
-        return True
+        if self.t >= 4:
+            self.plot.plot( [ 't', 'time' ],
+                            [ [ 'theta', 'theta' ] , [ 'theta_target', 'theta_target' ] ])
+            self.plot.plot( [ 't', 'time' ],
+                            [ [ 'vx', 'vx' ], [ 'vx_target', 'vx_target']  ])
+            self.plot.show()
+            return False
+        else:
+            return True
 
     def get_pose(self):
         return self.MR.x, self.MR.z, self.MR.theta

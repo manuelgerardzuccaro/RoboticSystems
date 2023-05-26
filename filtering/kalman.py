@@ -17,7 +17,7 @@ class KalmanFilter:
         self.Q = np.eye(4, 4) * 0.05
 
         # measure covariance (initially high)
-        self.R = np.eye(4, 4) * 1000
+        self.R = np.eye(4, 4) * 10
 
         # measure matrix (only x and y masured)
         self.H = np.matrix([[1, 0, 0, 0],
@@ -104,8 +104,8 @@ pylab.ylabel('y')
 pylab.legend()
 
 pylab.figure(2)
-pylab.plot(predicted_trajectory_x, predicted_trajectory_y, 'g-+', label='fitered')
 pylab.plot(trajectory_x, trajectory_y, 'r-+', label='real trajectory')
+pylab.plot(predicted_trajectory_x, predicted_trajectory_y, 'g-+', label='fitered')
 pylab.xlabel('x')
 pylab.ylabel('y')
 pylab.legend()
