@@ -104,7 +104,9 @@ while t < 15:
 
     f.prediction(delta_l, delta_r)
 
-    measure =  100.0 + np.random.normal(0.0, measure_error_std)
+    measure = 100.0 + np.random.normal(0.0, measure_error_std)
+    measure = measure * math.cos(f.th_r)
+
     measures.append(measure)
     times.append(t)
 

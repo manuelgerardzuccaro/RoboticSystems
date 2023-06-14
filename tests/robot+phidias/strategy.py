@@ -8,10 +8,10 @@ from pathlib import Path
 CURRENT_POSITION = Path(__file__).parent
 sys.path.append(f"{CURRENT_POSITION}/../../")
 
-from lib.phidias.Types import *
-from lib.phidias.Main import *
-from lib.phidias.Lib import *
-from lib.phidias.Agent import *
+from phidias.Types import *
+from phidias.Main import *
+from phidias.Lib import *
+from phidias.Agent import *
 
 # beliefs interpreted by the robot
 class go_to(Belief): pass

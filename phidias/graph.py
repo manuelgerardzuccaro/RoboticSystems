@@ -31,6 +31,7 @@ PHIDIAS.assert_belief(link('C', 'F', 1))
 PHIDIAS.assert_belief(link('C', 'G', 4))
 
 PHIDIAS.assert_belief(link('D', 'E', 2))
+PHIDIAS.assert_belief(link('D', 'C', 1))
 
 PHIDIAS.assert_belief(link('E', 'C', 2))
 PHIDIAS.assert_belief(link('E', 'G', 4))
