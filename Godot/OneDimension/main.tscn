@@ -1,0 +1,75 @@
+[gd_scene load_steps=9 format=3 uid="uid://bxyujxhibp0cs"]
+
+[ext_resource type="Script" path="res://Car.gd" id="1_i25mi"]
+[ext_resource type="Texture2D" uid="uid://c5dln0joe2xpj" path="res://Assets/Images/cars/sedan_blue.png" id="1_rjeto"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dwhrh"]
+size = Vector2(1779, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f5wag"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_feq4s"]
+size = Vector2(15, 28)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w4786"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_a1o11"]
+friction = 0.9
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gvim7"]
+size = Vector2(98, 44)
+
+[node name="Main" type="Node2D"]
+
+[node name="Floor" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+position = Vector2(879.5, 551)
+shape = SubResource("RectangleShape2D_dwhrh")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Floor"]
+position = Vector2(575.378, 550.75)
+scale = Vector2(-1170.26, 19.5)
+mesh = SubResource("BoxMesh_f5wag")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Floor"]
+position = Vector2(-2.5, 527)
+shape = SubResource("RectangleShape2D_feq4s")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Floor/CollisionShape2D2"]
+position = Vector2(0, -2.86102e-06)
+scale = Vector2(15, 28)
+mesh = SubResource("BoxMesh_w4786")
+
+[node name="Car" type="RigidBody2D" parent="."]
+position = Vector2(57, 519)
+physics_material_override = SubResource("PhysicsMaterial_a1o11")
+can_sleep = false
+script = ExtResource("1_i25mi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Car"]
+shape = SubResource("RectangleShape2D_gvim7")
+
+[node name="Sprite2D" type="Sprite2D" parent="Car"]
+texture_filter = 1
+scale = Vector2(3.38462, 3.38462)
+texture = ExtResource("1_rjeto")
+
+[node name="VSlider" type="VSlider" parent="."]
+offset_left = 61.0
+offset_top = 24.0
+offset_right = 80.0
+offset_bottom = 269.0
+min_value = 1000.0
+max_value = 2500.0
+step = 100.0
+value = 1000.0
+
+[node name="InputForce" type="Label" parent="."]
+offset_left = 10.0
+offset_top = 288.0
+offset_right = 50.0
+offset_bottom = 311.0
+text = "1000 kg px/s^2"
+
+[connection signal="value_changed" from="VSlider" to="Car" method="_on_v_slider_value_changed"]
