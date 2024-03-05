@@ -13,6 +13,7 @@ func _ready():
 
 
 func _physics_process(delta):
+	print("P = ", self.global_position.x, ", V = ", self.linear_velocity.x)
 	server.poll()
 	
 	if server.is_connection_available():
@@ -29,12 +30,13 @@ func _physics_process(delta):
 		peer.put_var(tosend)
 		
 		
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	print("P = ", self.global_position.x, ", V = ", self.linear_velocity.x)
+	pass
+
 
 var force = 1000
-
 
 func _integrate_forces(state):
 	if Input.is_action_pressed("ui_right"):

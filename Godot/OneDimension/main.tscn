@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://c5dln0joe2xpj" path="res://Assets/Images/cars/sedan_blue.png" id="1_rjeto"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dwhrh"]
-size = Vector2(1779, 20)
+size = Vector2(2340, 20)
 
 [sub_resource type="BoxMesh" id="BoxMesh_f5wag"]
 
@@ -24,7 +24,7 @@ size = Vector2(98, 44)
 [node name="Floor" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
-position = Vector2(879.5, 551)
+position = Vector2(1160, 551)
 shape = SubResource("RectangleShape2D_dwhrh")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Floor"]

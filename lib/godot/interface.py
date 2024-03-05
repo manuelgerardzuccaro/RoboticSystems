@@ -26,7 +26,4 @@ if __name__ == "__main__":
 
     while True:
         print(g.process(1000.0))
-        #(delta, x, y, z, vx, vy, vz, roll, pitch, yaw, w_roll, w_pitch, w_yaw) = g.process(t,t,t,t)
-        #print(delta, z, vz)
-        #time.sleep(1)
 

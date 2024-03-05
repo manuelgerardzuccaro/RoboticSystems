@@ -11,6 +11,27 @@ class Proportional:
         return self.kp * error
 
 
+class ProportionalSat:
+
+    def __init__(self, kp, saturation):
+        self.kp = kp
+        self.saturation = saturation
+
+    def evaluate(self, target, current):
+        error = target - current
+        return self.kp * error
+
+    def evaluate_error(self, error):
+        output = self.kp * error
+
+        if output > self.saturation:
+            output = self.saturation
+        elif output < -self.saturation:
+            output = - self.saturation
+
+        return output
+
+
 class Integral:
 
     def __init__(self, ki):
