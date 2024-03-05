@@ -42,7 +42,7 @@ scale = Vector2(15, 28)
 mesh = SubResource("BoxMesh_w4786")
 
 [node name="Car" type="RigidBody2D" parent="."]
-position = Vector2(57, 519)
+position = Vector2(58, 519)
 physics_material_override = SubResource("PhysicsMaterial_a1o11")
 can_sleep = false
 script = ExtResource("1_i25mi")

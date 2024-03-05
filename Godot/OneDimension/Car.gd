@@ -1,11 +1,34 @@
 extends RigidBody2D
 @onready var slider_label = $"../InputForce"
 
+@export var udpPort: int = 4444
+
+var server: UDPServer
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	#inizializzazione server
+	server = UDPServer.new()
+	server.listen(udpPort)
 
 
+func _physics_process(delta):
+	server.poll()
+	
+	if server.is_connection_available():
+		var peer: PacketPeerUDP = server.take_connection()
+		var packet = peer.get_packet()
+		var new_force = packet.decode_float(0)
+
+		self.apply_central_force(Vector2(new_force,0))
+
+		var tosend =  PackedFloat32Array()
+		tosend.append(delta)
+		tosend.append(self.global_position.x)
+		tosend.append(self.linear_velocity.x)
+		peer.put_var(tosend)
+		
+		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	print("P = ", self.global_position.x, ", V = ", self.linear_velocity.x)
