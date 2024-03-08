@@ -1,5 +1,5 @@
 #
-# godot_arm_interface.py
+# interface.py
 #
 
 import socket

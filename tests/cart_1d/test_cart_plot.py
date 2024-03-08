@@ -19,7 +19,7 @@ time_array = []
 speed_array = []
 position_array = []
 
-while t < 30:  # let's simulate 10 seconds
+while t < 50:  # let's simulate 10 seconds
     time_array.append(t)
     speed_array.append(cart.speed)
     position_array.append(cart.position)

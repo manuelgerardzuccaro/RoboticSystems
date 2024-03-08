@@ -21,6 +21,14 @@ size = Vector2(98, 44)
 
 [node name="Main" type="Node2D"]
 
+[node name="ResetButton" type="Button" parent="."]
+offset_left = 962.0
+offset_top = 49.0
+offset_right = 1093.0
+offset_bottom = 95.0
+text = "Reset
+"
+
 [node name="Floor" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]

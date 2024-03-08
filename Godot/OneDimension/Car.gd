@@ -1,16 +1,25 @@
 extends RigidBody2D
 @onready var slider_label = $"../InputForce"
-
+@onready var reset_button = $"../ResetButton"
 @export var udpPort: int = 4444
 
 var server: UDPServer
+var initial_position
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	reset_button.pressed.connect(self._reset_pressed)
+	initial_position = self.global_position
 	#inizializzazione server
 	server = UDPServer.new()
 	server.listen(udpPort)
 
+func _reset_pressed():
+	#print("pressed")
+	PhysicsServer2D.body_set_state(
+		self,
+		PhysicsServer2D.BODY_STATE_TRANSFORM,
+		Transform2D.IDENTITY.translated(initial_position))
 
 func _physics_process(delta):
 	print("P = ", self.global_position.x, ", V = ", self.linear_velocity.x)
