@@ -9,7 +9,7 @@ sys.path.append(f"{CURRENT_POSITION}/../../")
 
 from lib.models.arm import Arm
 from lib.models.robot import RoboticSystem
-from lib.controllers.standard import PID
+from lib.controllers.standard import *
 from lib.gui.gui_1d import ArmWindow
 from lib.data.plot import DataPlotter
 
@@ -23,7 +23,7 @@ class ArmRobot(RoboticSystem):
         # lenght = 0.6
         self.arm = Arm(1, 0.8, 0.6)
         self.plotter = DataPlotter()
-        self.controller = PID(8, 30, 5)
+        self.controller = PID(8, 5, 2)
         self.target = math.radians(20)
 
     def run(self):
@@ -35,10 +35,10 @@ class ArmRobot(RoboticSystem):
         self.plotter.add('error', math.degrees(self.target - self.get_pose()))
         self.plotter.add('omega', self.get_speed())
         self.plotter.add('theta', math.degrees(self.get_pose()))
-        if self.t >= 10:  # after 20 seconds plot data and stop simulation
+        if self.t >= 20:  # after 20 seconds plot data and stop simulation
             self.plotter.plot(['t', 'time'],
                               [['target', 'Target theta'],
-                               ['theta', 'Current Thetha']])
+                               ['theta', 'Current Theta']])
             self.plotter.show()
             return False
         else:

@@ -10,11 +10,11 @@ from lib.godot.interface import *
 from lib.controllers.standard import *
 
 cart = GodotCart1D()
-controller = ProportionalIntegral(10,20)
+controller = ProportionalIntegral(10,15)
 
 t = 0  # beginning of events
 
-target_speed = 500
+target_speed = 200
 _input = 0
 
 time_array = []

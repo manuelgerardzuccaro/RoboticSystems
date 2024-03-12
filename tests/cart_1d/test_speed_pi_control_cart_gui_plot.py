@@ -26,13 +26,18 @@ class CartRobot(RoboticSystem):
 
     def run(self):
         F = self.controller.evaluate(self.delta_t, self.target_speed, self.get_speed())
+        contr_out = F
+        if self.t >= 7:
+               F = F + 1
         self.cart.evaluate(self.delta_t, F)
         self.plotter.add('t', self.t)
         self.plotter.add('target', self.target_speed)
         self.plotter.add('speed', self.get_speed())
+        self.plotter.add('f', contr_out)
         if self.t >= 15:
             self.plotter.plot(['t', 'time'], [['target', 'Target'],
-                                              ['speed', 'Current Speed']])
+                                              ['speed', 'Current Speed'],
+                                              ['f', 'Force']])
             self.plotter.show()
             return False
         else:

@@ -20,7 +20,7 @@ class ArmRobot(RoboticSystem):
         # Mass = 1kg
         # friction = 0.8
         # lenght = 0.6
-        self.arm = Arm(1, 0.8, 0.6)
+        self.arm = Arm(1.5, 0.8, 0.6)
         self.plotter = DataPlotter()
 
     def run(self):
